@@ -106,6 +106,27 @@ event.usage = {
 Different providers include different metadata:
 
 #### OpenRouter
+
+**⚠️ Important: OpenRouter Configuration**
+
+To track costs with OpenRouter, you **must** enable usage accounting on your model configuration:
+
+```typescript
+import { openrouter } from '@openrouter/ai-sdk-provider';
+
+const agent = new Agent({
+  name: 'Assistant',
+  model: openrouter('anthropic/claude-3.5-haiku', {
+    usage: { include: true }  // ← REQUIRED for cost tracking
+  }),
+  instructions: 'You are helpful.',
+});
+```
+
+**Without this flag**, `extractOpenRouterUsage()` will return `cost: 0` even though the operation consumed tokens and incurred costs. See the [OpenRouter Cost Tracking Guide](../examples/usage-tracking/OPENROUTER-COST-TRACKING.md) for more details.
+
+**Extracting OpenRouter Usage:**
+
 ```typescript
 import { extractOpenRouterUsage } from '@fondation-io/agents';
 

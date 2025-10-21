@@ -24,7 +24,7 @@ Ce document analyse l'intérêt de chaque bibliothèque AI SDK Tools dans le con
 
 ### 1. @fondation-io/store
 
-**Version**: 0.8.2
+**Version**: 1.0.0
 **Type**: 100% CLIENT (React hooks)
 **Dépendances**: `react ^18.0`, `zustand ^5.0`, `@ai-sdk/react ^2.0`
 
@@ -131,7 +131,7 @@ const chat = useChat({
 
 ### 2. @fondation-io/memory
 
-**Version**: 0.1.2
+**Version**: 1.0.0
 **Type**: 100% SERVER (providers Redis/SQL)
 **Dépendances**: `zod ^4.1`
 **Peer deps optionnelles**: `@upstash/redis ^1.34`, `drizzle-orm ^0.36`
@@ -303,7 +303,7 @@ export async function POST(req: Request) {
 
 ### 3. @fondation-io/cache
 
-**Version**: 0.7.2
+**Version**: 1.0.0
 **Type**: 100% SERVER (wrapper de tools)
 **Dépendances**: Aucune (peer: `ai ^5.0`)
 **Backends**: LRU in-memory, Redis (Upstash, ioredis, redis)
@@ -475,7 +475,7 @@ cachedTool.clearCache('specific-key') // Clé précise
 
 ### 4. @fondation-io/artifacts
 
-**Version**: 0.8.2
+**Version**: 1.0.0
 **Type**: MIXTE (server pour `artifact()`, client pour `useArtifact`)
 **Dépendances**: `@fondation-io/store` (client), `zod`, `ai ^5.0`
 
@@ -707,7 +707,7 @@ const tool = tool({
 
 ### 5. @fondation-io/devtools
 
-**Version**: 0.8.2
+**Version**: 1.0.0
 **Type**: 100% CLIENT (React component)
 **Dépendances**: `react ^18`, `@mui/material ^7`, `@xyflow/react ^12`, `@fondation-io/store` (optionnel)
 
@@ -872,7 +872,7 @@ function CustomDebugPanel() {
 
 ### 6. @fondation-io/agents
 
-**Version**: 0.2.2
+**Version**: 1.1.0
 **Type**: 100% SERVER (orchestration)
 **Dépendances**: `@fondation-io/memory` (workspace), `ai ^5.0`, `zod ^3.25|^4.1`
 

@@ -8,7 +8,7 @@
 
 Le package `@fondation-io/agents` implémente un système d'orchestration multi-agents au-dessus d'AI SDK v5. Il fournit un framework déclaratif pour créer des workflows d'agents intelligents avec handoffs automatiques, guardrails, permissions, et intégration mémoire.
 
-**Version**: 0.2.2
+**Version**: 1.1.0
 **Taille**: ~3000 lignes de code TypeScript
 **Type**: 100% SERVER (Node.js/Edge runtime)
 **Dépendances principales**: `ai ^5.0`, `zod ^3.25|^4.1`, `@fondation-io/memory`, `@fondation-io/debug`
@@ -367,6 +367,71 @@ writeSuggestions(writer, suggestions[])
 - Consommé via `useChat` de `@fondation-io/store`
 - Data parts parsés automatiquement
 - Status updates real-time
+
+---
+
+### 9. Global Usage Tracking
+
+**Fichier**: `usage-tracking.ts`
+
+**Objectif**: Monitoring centralisé automatique des tokens, coûts et métriques d'utilisation pour tous les agents sans injection manuelle de callbacks.
+
+**Architecture**:
+
+```typescript
+// Configuration globale (une fois au démarrage)
+configureUsageTracking((event: UsageTrackingEvent) => {
+  // Tracking automatique pour tous les agents
+  console.log(`${event.agentName}: ${event.usage?.totalTokens} tokens`);
+});
+```
+
+**UsageTrackingEvent**:
+```typescript
+interface UsageTrackingEvent {
+  agentName: string              // Agent qui a exécuté
+  sessionId?: string             // Extrait du context
+  handoffChain?: string[]        // Chaîne de handoffs
+
+  usage?: LanguageModelUsage     // Tokens (AI SDK standard)
+  providerMetadata?: unknown     // Metadata provider-specific
+
+  method: 'generate' | 'stream'  // Méthode appelée
+  finishReason?: string          // Raison de fin
+  duration?: number              // Durée (ms, generate() only)
+
+  context?: Record<string, unknown>  // Context d'exécution
+}
+```
+
+**Patterns clés**:
+- **Fire-and-forget**: Callbacks async n'impactent pas la latence des réponses
+- **Error resilience**: Erreurs de tracking n'interrompent jamais les agents
+- **Provider agnostic**: Fonctionne avec OpenAI, Anthropic, OpenRouter, etc.
+- **Multi-agent aware**: Suit automatiquement les handoff chains
+
+**OpenRouter Support**:
+```typescript
+import { extractOpenRouterUsage } from '@fondation-io/agents';
+
+configureUsageTracking((event) => {
+  const openRouterUsage = extractOpenRouterUsage({
+    providerMetadata: event.providerMetadata
+  });
+
+  if (openRouterUsage) {
+    console.log(`Cost: $${openRouterUsage.cost}`);
+  }
+});
+```
+
+**⚠️ Important**: OpenRouter requiert `usage: { include: true }` sur la config du modèle pour obtenir les coûts.
+
+**Use cases**:
+- Persistence en DB pour analytics
+- Monitoring coûts temps réel
+- Budget enforcement par user
+- Analyse de workflows multi-agents
 
 ---
 
@@ -852,4 +917,4 @@ Ce système d'agents est basé sur le package [@ai-sdk-tools/agents](https://git
 
 ---
 
-**Dernière mise à jour**: Analyse basée sur @fondation-io/agents v0.2.2 (fork, décembre 2024)
+**Dernière mise à jour**: Analyse basée sur @fondation-io/agents v1.1.0 (fork, octobre 2025)

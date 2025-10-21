@@ -204,7 +204,7 @@ npm install @fondation-io/store @fondation-io/memory zustand
 
 ### 1.1 Informations générales
 
-**Version**: 0.8.2
+**Version**: 1.0.0
 **Description**: Drop-in replacement pour @ai-sdk/react avec synchronisation automatique vers Zustand
 **Philosophie**: Éliminer le prop drilling, optimiser les performances de streaming, maintenir la compatibilité totale avec l'AI SDK
 
@@ -405,7 +405,7 @@ useEffect(() => {
 
 ### 2.1 Informations générales
 
-**Version**: 0.1.2
+**Version**: 1.0.0
 **Description**: Système de mémoire persistante pour agents IA
 **Type**: ESM (module natif)
 
