@@ -36,7 +36,7 @@ export interface OpenRouterUsage {
 	/** Tokens in the completion */
 	completionTokens: number;
 
-	/** Cost in USD */
+	/** Cost in USD (computed from costDetails) */
 	cost: number;
 
 	/** Detailed breakdown of prompt tokens */
@@ -49,6 +49,12 @@ export interface OpenRouterUsage {
 	completionTokensDetails?: {
 		/** Reasoning tokens (OpenAI O1 models) */
 		reasoningTokens?: number;
+	};
+
+	/** Cost details from OpenRouter */
+	costDetails?: {
+		/** Upstream inference cost in USD */
+		upstreamInferenceCost?: number;
 	};
 }
 

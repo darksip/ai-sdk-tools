@@ -62,13 +62,14 @@
     }
   },
   "devDependencies": {
+    "@ai-sdk/openai": "^2.0.53",
+    "@fondation-io/debug": "workspace:*",
+    "@fondation-io/memory": "workspace:*",
     "@types/node": "^24.7.2",
+    "ai": "^5.0.71",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3",
-    "zod": "^4.1.12",
-    "ai": "^5.0.71",
-    "@fondation-io/debug": "workspace:*",
-    "@fondation-io/memory": "workspace:*"
+    "zod": "^4.1.12"
   },
   "publishConfig": {
     "access": "public"

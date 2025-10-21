@@ -9,12 +9,22 @@ This directory contains examples demonstrating how to use OpenRouter with `@fond
    bun install
    ```
 
-2. **Set OpenRouter API key**:
+2. **Configure environment variables**:
+
+   Create a `.env` file in this directory (if not already present):
    ```bash
-   export OPENROUTER_API_KEY=sk-or-v1-...
+   cd packages/agents/src/examples/openrouter
+   cp .env.example .env
+   ```
+
+   Then edit `.env` and add your OpenRouter API key:
+   ```
+   OPENROUTER_API_KEY=sk-or-v1-...
    ```
 
    Get your API key from [openrouter.ai](https://openrouter.ai)
+
+   **Note**: All examples automatically load the `.env` file from this directory, so you can run them directly without manually exporting environment variables.
 
 ## Examples
 
