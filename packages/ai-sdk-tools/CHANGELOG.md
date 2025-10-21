@@ -1,5 +1,11 @@
 # ai-sdk-tools
 
+## 1.0.1
+
+### Patch Changes
+
+- Update dependencies to use @fondation-io/agents@1.1.0 with global usage tracking support
+
 ## 1.0.0
 
 ### Major Changes
