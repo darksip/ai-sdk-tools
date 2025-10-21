@@ -149,6 +149,7 @@ export class Agent<
         steps: result.steps,
         finishReason: result.finishReason,
         usage: result.usage,
+        providerMetadata: result.providerMetadata,
         toolCalls: result.toolCalls?.map((tc) => ({
           toolCallId: tc.toolCallId,
           toolName: tc.toolName,
@@ -176,6 +177,9 @@ export class Agent<
     const onStepFinish = (options as Record<string, unknown>).onStepFinish as
       | ((step: unknown) => void | Promise<void>)
       | undefined;
+    const onFinish = (options as Record<string, unknown>).onFinish as
+      | ((event: unknown) => void | Promise<void>)
+      | undefined;
 
     // Resolve instructions dynamically (static string or function)
     const resolvedInstructions =
@@ -184,8 +188,8 @@ export class Agent<
         : this.instructions;
 
     // Get memory addition from context if preloaded
-    const extendedContext = executionContext as ExtendedExecutionContext;
-    const memoryAddition = extendedContext._memoryAddition || "";
+    const extendedContext = executionContext as ExtendedExecutionContext | undefined;
+    const memoryAddition = extendedContext?._memoryAddition || "";
 
     // Build cache key for static parts
     const cacheKey = `${typeof this.instructions === "string" ? this.instructions : "dynamic"}_${this.handoffAgents.length}_${this.memory?.workingMemory?.enabled || false}`;
@@ -254,6 +258,7 @@ export class Agent<
 
     if (maxSteps) additionalOptions.maxSteps = maxSteps;
     if (onStepFinish) additionalOptions.onStepFinish = onStepFinish;
+    if (onFinish) additionalOptions.onFinish = onFinish;
 
     // Handle simple { messages } format (like working code)
     if ("messages" in options && !("prompt" in options) && options.messages) {
