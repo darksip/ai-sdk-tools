@@ -111,6 +111,8 @@ bun run clean
 ```
 
 ### Release Management
+
+#### Local Publishing (Manual)
 ```bash
 # Create a changeset (describe your changes)
 bun run changeset
@@ -127,6 +129,72 @@ bun run version-packages:beta       # Version with beta tag
 bun run release:beta                # Publish beta
 bun run changeset:exit-beta         # Exit beta mode
 ```
+
+#### GitHub Actions Publishing (Recommended)
+
+**Using the Manual Publish Workflow with OIDC:**
+
+The repository uses GitHub Actions with OIDC (OpenID Connect) for secure npm publishing with provenance attestation.
+
+**Prerequisites:**
+- Commits must be pushed to `main` branch
+- Version must be bumped (using changesets)
+- `NPM_TOKEN` secret configured in repository settings
+
+**Trigger the workflow:**
+
+```bash
+# 1. Push all commits to main
+git push origin main
+
+# 2. Trigger manual publish workflow (stable release)
+gh workflow run publish-manual.yml -R darksip/ai-sdk-tools \
+  -f release_type=stable \
+  -f dry_run=false
+
+# 3. Monitor workflow execution
+gh run list -R darksip/ai-sdk-tools --workflow=publish-manual.yml --limit 1
+
+# 4. View workflow details in browser
+gh run view <RUN_ID> -R darksip/ai-sdk-tools --web
+```
+
+**Dry-run mode (test without publishing):**
+```bash
+gh workflow run publish-manual.yml -R darksip/ai-sdk-tools \
+  -f release_type=stable \
+  -f dry_run=true
+```
+
+**Beta release:**
+```bash
+gh workflow run publish-manual.yml -R darksip/ai-sdk-tools \
+  -f release_type=beta \
+  -f dry_run=false
+```
+
+**What the workflow does:**
+1. Checkout repository with full history
+2. Install Bun and Node.js dependencies
+3. Build all packages in dependency order
+4. Run `node scripts/pre-publish.js prepare` (converts workspace:* to versions)
+5. Publish packages to npm with OIDC provenance in dependency order:
+   - `@fondation-io/debug`
+   - `@fondation-io/store`
+   - `@fondation-io/memory`
+   - `@fondation-io/cache`
+   - `@fondation-io/artifacts`
+   - `@fondation-io/devtools`
+   - `@fondation-io/agents`
+   - `@fondation-io/ai-sdk-tools`
+6. Restore workspace dependencies
+7. Commit version changes back to repository
+
+**Notes:**
+- Workflow uses npm provenance (--provenance flag) for supply chain security
+- OIDC authentication eliminates need for long-lived npm tokens
+- Failed package publishes are logged but don't break the workflow
+- Version commits include `[skip ci]` to prevent CI loops
 
 ## Monorepo Architecture
 
