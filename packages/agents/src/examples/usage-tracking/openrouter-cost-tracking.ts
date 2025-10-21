@@ -122,21 +122,28 @@ configureUsageTracking({
 });
 
 // Create agents with different OpenRouter models
+// IMPORTANT: usage: { include: true } is REQUIRED for cost tracking with OpenRouter
 const fastAgent = new Agent({
   name: "FastAgent",
-  model: openrouter("google/gemini-2.5-flash"), // Cheap, fast, reliable cost tracking
+  model: openrouter("google/gemini-2.5-flash", {
+    usage: { include: true },  // Required for cost tracking
+  }),
   instructions: "You are a quick assistant. Give brief, concise answers.",
 });
 
 const smartAgent = new Agent({
   name: "SmartAgent",
-  model: openrouter("anthropic/claude-3.5-sonnet"), // More expensive, smarter
+  model: openrouter("anthropic/claude-3.5-sonnet", {
+    usage: { include: true },  // Required for cost tracking
+  }),
   instructions: "You are an intelligent assistant. Provide detailed, thoughtful answers.",
 });
 
 const reasoningAgent = new Agent({
   name: "ReasoningAgent",
-  model: openrouter("openai/o1-mini"), // Reasoning model
+  model: openrouter("openai/o1-mini", {
+    usage: { include: true },  // Required for cost tracking
+  }),
   instructions: "You are a reasoning assistant. Think through problems step by step.",
 });
 

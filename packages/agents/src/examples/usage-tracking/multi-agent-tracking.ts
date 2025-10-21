@@ -17,7 +17,7 @@ import {
   formatCost,
   formatTokens,
 } from "../../index.js";
-import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { openrouter } from "@openrouter/ai-sdk-provider";
 
 // Load environment variables from .env file in current directory
 async function loadEnv() {
@@ -87,15 +87,13 @@ configureUsageTracking((event) => {
   console.log("=".repeat(50) + "\n");
 });
 
-// Create OpenRouter provider
-const openrouter = createOpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY || "your-api-key",
-});
-
 // Create a triage agent that routes to specialists
+// IMPORTANT: usage: { include: true } is REQUIRED for cost tracking with OpenRouter
 const triageAgent = new Agent({
   name: "Triage",
-  model: openrouter("openai/gpt-3.5-turbo"), // Fast, cheap triage
+  model: openrouter("openai/gpt-3.5-turbo", {
+    usage: { include: true },  // Required for cost tracking
+  }),
   instructions: "You are a triage agent. Route technical questions to TechnicalSupport and billing questions to Billing.",
   handoffs: [], // Will add specialists below
 });
@@ -103,13 +101,17 @@ const triageAgent = new Agent({
 // Create specialist agents with different models
 const technicalSupportAgent = new Agent({
   name: "TechnicalSupport",
-  model: openrouter("openai/gpt-4-turbo"), // More capable for technical questions
+  model: openrouter("openai/gpt-4-turbo", {
+    usage: { include: true },  // Required for cost tracking
+  }),
   instructions: "You are a technical support specialist. Answer technical questions clearly and concisely.",
 });
 
 const billingAgent = new Agent({
   name: "Billing",
-  model: openrouter("openai/gpt-3.5-turbo"), // Sufficient for billing queries
+  model: openrouter("openai/gpt-3.5-turbo", {
+    usage: { include: true },  // Required for cost tracking
+  }),
   instructions: "You are a billing specialist. Help with payment and subscription questions.",
 });
 

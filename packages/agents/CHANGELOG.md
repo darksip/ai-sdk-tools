@@ -37,6 +37,12 @@
   - Analytics and usage pattern analysis
   - Real-time budget alerts
 
+  **⚠️ Important for OpenRouter Users**:
+  - OpenRouter requires `usage: { include: true }` on the model configuration to provide cost information
+  - Without this flag, `extractOpenRouterUsage()` will return `cost: 0`
+  - Example: `openrouter('model-name', { usage: { include: true } })`
+  - See `OPENROUTER-COST-TRACKING.md` in usage-tracking examples for details
+
 - **OpenRouter Native Support**: First-class integration with type-safe utilities for cost tracking and budget monitoring
 
   **Type Definitions**:

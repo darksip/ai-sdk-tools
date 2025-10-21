@@ -112,55 +112,25 @@ export class Agent<
     const startTime = new Date();
 
     try {
-      // Use stream() internally to get proper OpenRouter cost metadata in onFinish
-      // (generateText() doesn't provide cost information in providerMetadata)
-      let providerMetadata: unknown = undefined;
-      let usage: any = undefined;
-      let finishReason: any = undefined;
-
-      const streamResult =
+      const result =
         options.messages && options.messages.length > 0
-          ? this.aiAgent.stream({
+          ? await this.aiAgent.generate({
               messages: [
                 ...options.messages,
                 { role: "user", content: options.prompt || "Continue" },
               ],
-              onFinish: (event: any) => {
-                // Capture metadata from onFinish callback (has cost info for OpenRouter)
-                providerMetadata = event.providerMetadata;
-                usage = event.usage;
-                finishReason = event.finishReason;
-              },
             })
-          : this.aiAgent.stream({
+          : await this.aiAgent.generate({
               prompt: options.prompt,
-              onFinish: (event: any) => {
-                // Capture metadata from onFinish callback (has cost info for OpenRouter)
-                providerMetadata = event.providerMetadata;
-                usage = event.usage;
-                finishReason = event.finishReason;
-              },
             });
-
-      // Consume the full stream to get all data
-      let fullText = "";
-      const allSteps: StepResult<string, any>[] = [];
-
-      for await (const chunk of streamResult.fullStream) {
-        if (chunk.type === "text-delta") {
-          fullText += chunk.text;
-        } else if (chunk.type === "step-finish") {
-          allSteps.push(chunk as any);
-        }
-      }
 
       const endTime = new Date();
       const duration = endTime.getTime() - startTime.getTime();
 
       // Extract handoffs from steps
       const handoffs: HandoffInstruction[] = [];
-      if (allSteps && allSteps.length > 0) {
-        for (const step of allSteps) {
+      if (result.steps) {
+        for (const step of result.steps) {
           if (step.toolResults) {
             for (const toolResult of step.toolResults) {
               if (isHandoffResult(toolResult.output)) {
@@ -171,30 +141,26 @@ export class Agent<
         }
       }
 
-      // Extract tool calls from last step
-      const lastStep = allSteps.length > 0 ? allSteps[allSteps.length - 1] : undefined;
-      const toolCalls = lastStep?.toolCalls?.map((tc) => ({
-        toolCallId: tc.toolCallId,
-        toolName: tc.toolName,
-        args: "args" in tc ? tc.args : undefined,
-      }));
-
       // Build the result object
       const generateResult: AgentGenerateResult = {
-        text: fullText,
+        text: result.text || "",
         finalAgent: this.name,
-        finalOutput: fullText,
+        finalOutput: result.text || "",
         handoffs,
         metadata: {
           startTime,
           endTime,
           duration,
         },
-        steps: allSteps,
-        finishReason,
-        usage,
-        providerMetadata,
-        toolCalls,
+        steps: result.steps,
+        finishReason: result.finishReason,
+        usage: result.usage,
+        providerMetadata: result.providerMetadata,
+        toolCalls: result.toolCalls?.map((tc) => ({
+          toolCallId: tc.toolCallId,
+          toolName: tc.toolName,
+          args: "args" in tc ? tc.args : undefined,
+        })),
       };
 
       // Track usage if configured

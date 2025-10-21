@@ -463,6 +463,24 @@ const stream = agent.stream({ prompt: "Hello" });
 - Includes session context and custom metadata
 - Type-safe event structure
 
+#### ⚠️ OpenRouter Cost Tracking
+
+When using OpenRouter, you **must** enable usage accounting to track costs:
+
+```typescript
+import { openrouter } from '@openrouter/ai-sdk-provider';
+
+const agent = new Agent({
+  name: 'Assistant',
+  model: openrouter('anthropic/claude-3.5-haiku', {
+    usage: { include: true }  // ← REQUIRED for cost tracking with OpenRouter
+  }),
+  instructions: 'You are helpful.',
+});
+```
+
+Without `usage: { include: true }`, OpenRouter will not provide cost information and tracking will show $0. This is specific to OpenRouter - other providers don't require this configuration.
+
 See the [Usage Tracking Guide](./docs/guides/usage-tracking-configuration.md) for complete documentation and examples.
 
 ## Complex Multi-Agent Example
