@@ -1,0 +1,230 @@
+name: Check Upstream Updates
+
+on:
+  # Exécution hebdomadaire le lundi à 9h
+  schedule:
+    - cron: '0 9 * * 1'
+
+  # Déclenchement manuel
+  workflow_dispatch:
+    inputs:
+      create_issue:
+        description: 'Créer une issue GitHub avec le rapport'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-upstream:
+    name: Check for upstream updates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/midday-ai/ai-sdk-tools.git || true
+          git fetch upstream main
+
+      - name: Get last sync commit
+        id: last-sync
+        run: |
+          # Chercher le dernier commit qui mentionne "sync" ou "upstream"
+          # Ou utiliser un tag de référence
+          LAST_SYNC=$(git log --grep="upstream" --format="%H" -n 1 || echo "")
+
+          if [ -z "$LAST_SYNC" ]; then
+            # Si aucun sync précédent, prendre le commit de fork initial
+            LAST_SYNC=$(git log --reverse --format="%H" -n 1)
+          fi
+
+          echo "last_sync=$LAST_SYNC" >> $GITHUB_OUTPUT
+          echo "Last sync commit: $LAST_SYNC"
+
+      - name: Compare with upstream
+        id: compare
+        run: |
+          UPSTREAM_HEAD=$(git rev-parse upstream/main)
+          FORK_HEAD=$(git rev-parse HEAD)
+
+          echo "upstream_head=$UPSTREAM_HEAD" >> $GITHUB_OUTPUT
+          echo "fork_head=$FORK_HEAD" >> $GITHUB_OUTPUT
+
+          # Compter les nouveaux commits upstream
+          NEW_COMMITS=$(git rev-list --count HEAD..upstream/main)
+          echo "new_commits=$NEW_COMMITS" >> $GITHUB_OUTPUT
+
+          if [ "$NEW_COMMITS" -eq 0 ]; then
+            echo "has_updates=false" >> $GITHUB_OUTPUT
+            echo "✅ No new commits upstream"
+          else
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+            echo "🔔 $NEW_COMMITS new commits found upstream"
+          fi
+
+      - name: Generate diff report
+        if: steps.compare.outputs.has_updates == 'true'
+        id: diff-report
+        run: |
+          mkdir -p reports
+
+          # Générer le log des commits upstream
+          git log --oneline --no-merges HEAD..upstream/main > reports/commits.txt
+
+          # Générer le diff détaillé des fichiers modifiés
+          git diff HEAD..upstream/main --stat > reports/files-changed.txt
+
+          # Analyser les packages modifiés
+          echo "## Packages modifiés" > reports/packages-analysis.txt
+          git diff HEAD..upstream/main --name-only | grep "^packages/" | cut -d'/' -f2 | sort -u >> reports/packages-analysis.txt || echo "Aucun package modifié" >> reports/packages-analysis.txt
+
+          # Détecter les changements critiques
+          echo "## Changements critiques potentiels" > reports/critical-changes.txt
+
+          # package.json changes (dependencies, versions)
+          if git diff HEAD..upstream/main --name-only | grep -q "package.json"; then
+            echo "⚠️ Modifications de package.json détectées" >> reports/critical-changes.txt
+          fi
+
+          # Breaking changes dans CHANGELOG
+          if git diff HEAD..upstream/main -- "**/CHANGELOG.md" | grep -qi "breaking"; then
+            echo "⚠️ BREAKING CHANGES détectés dans les CHANGELOG" >> reports/critical-changes.txt
+          fi
+
+          # Modifications de l'API publique
+          if git diff HEAD..upstream/main --name-only | grep -q "src/index.ts"; then
+            echo "⚠️ Modifications des exports publics (index.ts)" >> reports/critical-changes.txt
+          fi
+
+          # Nouveaux packages
+          PACKAGES_UPSTREAM=$(git ls-tree -d --name-only upstream/main:packages/ 2>/dev/null || echo "")
+          PACKAGES_FORK=$(git ls-tree -d --name-only HEAD:packages/ 2>/dev/null || echo "")
+
+          if [ -n "$PACKAGES_UPSTREAM" ] && [ -n "$PACKAGES_FORK" ]; then
+            NEW_PACKAGES=$(comm -13 <(echo "$PACKAGES_FORK" | sort) <(echo "$PACKAGES_UPSTREAM" | sort))
+            if [ -n "$NEW_PACKAGES" ]; then
+              echo "🆕 Nouveaux packages upstream:" >> reports/critical-changes.txt
+              echo "$NEW_PACKAGES" >> reports/critical-changes.txt
+            fi
+          fi
+
+      - name: Create detailed analysis
+        if: steps.compare.outputs.has_updates == 'true'
+        run: |
+          cat > reports/full-report.md << 'EOF'
+          # 🔄 Analyse des mises à jour upstream
+
+          **Repository upstream:** midday-ai/ai-sdk-tools
+          **Date d'analyse:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          **Nouveaux commits:** ${{ steps.compare.outputs.new_commits }}
+
+          ---
+
+          ## 📊 Résumé des commits
+
+          ```
+          $(cat reports/commits.txt)
+          ```
+
+          ---
+
+          ## 📁 Fichiers modifiés
+
+          ```
+          $(cat reports/files-changed.txt)
+          ```
+
+          ---
+
+          $(cat reports/packages-analysis.txt)
+
+          ---
+
+          $(cat reports/critical-changes.txt)
+
+          ---
+
+          ## 🔍 Actions recommandées
+
+          1. **Review manuel** : Examinez les commits ci-dessus pour comprendre les changements
+          2. **Cherry-pick sélectif** : Utilisez `git cherry-pick` pour intégrer les commits pertinents
+          3. **Tests** : Testez les changements avant de les merger
+          4. **Adaptation** : Adaptez les changements au scope @fondation-io si nécessaire
+
+          ## 📝 Commandes utiles
+
+          ```bash
+          # Voir les différences détaillées
+          git fetch upstream main
+          git diff HEAD..upstream/main
+
+          # Cherry-pick un commit spécifique
+          git cherry-pick <commit-hash>
+
+          # Voir les fichiers conflictuels potentiels
+          git diff HEAD..upstream/main --name-only | grep -E "(package.json|src/)"
+
+          # Créer une branche pour les updates
+          git checkout -b upstream-updates-$(date +%Y%m%d)
+          git merge upstream/main
+          ```
+
+          ## 🔗 Liens utiles
+
+          - [Comparer sur GitHub](https://github.com/midday-ai/ai-sdk-tools/compare/${{ steps.compare.outputs.fork_head }}...${{ steps.compare.outputs.upstream_head }})
+          - [Upstream commits](https://github.com/midday-ai/ai-sdk-tools/commits/main)
+          - [Notre fork](https://github.com/${{ github.repository }})
+
+          ---
+
+          *Rapport généré automatiquement par GitHub Actions*
+          EOF
+
+      - name: Upload report as artifact
+        if: steps.compare.outputs.has_updates == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: upstream-analysis-${{ github.run_number }}
+          path: reports/
+          retention-days: 90
+
+      - name: Create GitHub Issue
+        if: steps.compare.outputs.has_updates == 'true' && (github.event.inputs.create_issue == 'true' || github.event_name == 'schedule')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('reports/full-report.md', 'utf8');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔄 Nouvelles mises à jour upstream disponibles',
+              body: report,
+              labels: ['upstream', 'sync', 'needs-review']
+            });
+
+      - name: Summary
+        if: always()
+        run: |
+          if [ "${{ steps.compare.outputs.has_updates }}" = "true" ]; then
+            echo "## 🔔 Nouvelles mises à jour détectées" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**${{ steps.compare.outputs.new_commits }} nouveaux commits** trouvés dans midday-ai/ai-sdk-tools" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "📄 Un rapport détaillé a été généré et uploadé comme artifact." >> $GITHUB_STEP_SUMMARY
+            if [ "${{ github.event.inputs.create_issue }}" = "true" ] || [ "${{ github.event_name }}" = "schedule" ]; then
+              echo "📋 Une issue a été créée avec l'analyse complète." >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "## ✅ Aucune mise à jour upstream" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Votre fork est à jour avec midday-ai/ai-sdk-tools" >> $GITHUB_STEP_SUMMARY
+          fi
