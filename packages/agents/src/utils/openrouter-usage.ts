@@ -80,7 +80,18 @@ export function extractOpenRouterUsage(
 		return null;
 	}
 
-	return result.providerMetadata.openrouter.usage;
+	const rawUsage = result.providerMetadata.openrouter.usage;
+
+	// Compute cost: prefer rawUsage.cost (available in stream) over costDetails.upstreamInferenceCost (often 0 in generate)
+	// Only use costDetails.upstreamInferenceCost if it's > 0, as it's often 0 even when rawUsage.cost has the real value
+	const upstreamCost = rawUsage.costDetails?.upstreamInferenceCost ?? 0;
+	const directCost = rawUsage.cost ?? 0;
+	const cost = directCost > 0 ? directCost : upstreamCost;
+
+	return {
+		...rawUsage,
+		cost,
+	};
 }
 
 /**

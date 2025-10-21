@@ -27,6 +27,10 @@ import { createLogger } from "@fondation-io/debug";
 import { createHandoffTool, isHandoffResult, HANDOFF_TOOL_NAME } from "./handoff.js";
 import { promptWithHandoffInstructions } from "./handoff-prompt.js";
 import { writeAgentStatus, writeSuggestions } from "./streaming.js";
+import {
+  getUsageTrackingConfig,
+  type UsageTrackingEvent,
+} from "./usage-tracking-config.js";
 import type {
   AgentConfig,
   AgentEvent,
@@ -108,24 +112,55 @@ export class Agent<
     const startTime = new Date();
 
     try {
-      const result =
+      // Use stream() internally to get proper OpenRouter cost metadata in onFinish
+      // (generateText() doesn't provide cost information in providerMetadata)
+      let providerMetadata: unknown = undefined;
+      let usage: any = undefined;
+      let finishReason: any = undefined;
+
+      const streamResult =
         options.messages && options.messages.length > 0
-          ? await this.aiAgent.generate({
+          ? this.aiAgent.stream({
               messages: [
                 ...options.messages,
                 { role: "user", content: options.prompt || "Continue" },
               ],
+              onFinish: (event: any) => {
+                // Capture metadata from onFinish callback (has cost info for OpenRouter)
+                providerMetadata = event.providerMetadata;
+                usage = event.usage;
+                finishReason = event.finishReason;
+              },
             })
-          : await this.aiAgent.generate({
+          : this.aiAgent.stream({
               prompt: options.prompt,
+              onFinish: (event: any) => {
+                // Capture metadata from onFinish callback (has cost info for OpenRouter)
+                providerMetadata = event.providerMetadata;
+                usage = event.usage;
+                finishReason = event.finishReason;
+              },
             });
 
+      // Consume the full stream to get all data
+      let fullText = "";
+      const allSteps: StepResult<string, any>[] = [];
+
+      for await (const chunk of streamResult.fullStream) {
+        if (chunk.type === "text-delta") {
+          fullText += chunk.text;
+        } else if (chunk.type === "step-finish") {
+          allSteps.push(chunk as any);
+        }
+      }
+
       const endTime = new Date();
+      const duration = endTime.getTime() - startTime.getTime();
 
       // Extract handoffs from steps
       const handoffs: HandoffInstruction[] = [];
-      if (result.steps) {
-        for (const step of result.steps) {
+      if (allSteps && allSteps.length > 0) {
+        for (const step of allSteps) {
           if (step.toolResults) {
             for (const toolResult of step.toolResults) {
               if (isHandoffResult(toolResult.output)) {
@@ -136,26 +171,48 @@ export class Agent<
         }
       }
 
-      return {
-        text: result.text || "",
+      // Extract tool calls from last step
+      const lastStep = allSteps.length > 0 ? allSteps[allSteps.length - 1] : undefined;
+      const toolCalls = lastStep?.toolCalls?.map((tc) => ({
+        toolCallId: tc.toolCallId,
+        toolName: tc.toolName,
+        args: "args" in tc ? tc.args : undefined,
+      }));
+
+      // Build the result object
+      const generateResult: AgentGenerateResult = {
+        text: fullText,
         finalAgent: this.name,
-        finalOutput: result.text || "",
+        finalOutput: fullText,
         handoffs,
         metadata: {
           startTime,
           endTime,
-          duration: endTime.getTime() - startTime.getTime(),
+          duration,
         },
-        steps: result.steps,
-        finishReason: result.finishReason,
-        usage: result.usage,
-        providerMetadata: result.providerMetadata,
-        toolCalls: result.toolCalls?.map((tc) => ({
-          toolCallId: tc.toolCallId,
-          toolName: tc.toolName,
-          args: "args" in tc ? tc.args : undefined,
-        })),
+        steps: allSteps,
+        finishReason,
+        usage,
+        providerMetadata,
+        toolCalls,
       };
+
+      // Track usage if configured
+      const tracker = getUsageTrackingConfig();
+      if (tracker) {
+        const event = this.buildUsageEvent({
+          method: "generate",
+          result: generateResult,
+          context: (options as any).context,
+          duration,
+        });
+        // Invoke tracking asynchronously (don't block return)
+        this.invokeUsageTracker(event).catch((err) =>
+          logger.error("Usage tracking failed", { error: err }),
+        );
+      }
+
+      return generateResult;
     } catch (error) {
       throw new Error(
         `Agent ${this.name} failed: ${error instanceof Error ? error.message : "Unknown error"}`,
@@ -246,19 +303,38 @@ export class Agent<
 
     // Note: Conversation history is automatically loaded via loadMessagesWithHistory()
 
+    // Compose onFinish with usage tracking if configured
+    const tracker = getUsageTrackingConfig();
+    const composedOnFinish = tracker
+      ? async (event: unknown) => {
+          // Build and track usage event
+          const trackingEvent = this.buildUsageEvent({
+            method: "stream",
+            event,
+            context: executionContext,
+          });
+
+          // Run user callback and tracking in parallel
+          await Promise.all([
+            onFinish?.(event),
+            this.invokeUsageTracker(trackingEvent),
+          ]);
+        }
+      : onFinish;
+
     // Build additional options to pass to AI SDK
     const additionalOptions: Record<string, unknown> = {
       system: systemPrompt, // Override system prompt per call
       tools: resolvedTools, // Add resolved tools here
     };
-    
+
     if (executionContext) {
       additionalOptions.experimental_context = executionContext;
     }
 
     if (maxSteps) additionalOptions.maxSteps = maxSteps;
     if (onStepFinish) additionalOptions.onStepFinish = onStepFinish;
-    if (onFinish) additionalOptions.onFinish = onFinish;
+    if (composedOnFinish) additionalOptions.onFinish = composedOnFinish;
 
     // Handle simple { messages } format (like working code)
     if ("messages" in options && !("prompt" in options) && options.messages) {
@@ -432,6 +508,9 @@ export class Agent<
 
         // Add runContext to execution context for shared memory tool
         (executionContext as any).runContext = runContext;
+
+        // Initialize handoff chain for usage tracking
+        (executionContext as any)._handoffChain = [] as string[];
 
         // Store memory addition for system prompt injection
         if (memoryAddition) {
@@ -900,6 +979,12 @@ export class Agent<
                       logger.error("Error in onHandoff callback", { error });
                       // Continue execution - callback errors shouldn't stop handoff
                     }
+                  }
+
+                  // Update handoff chain before switching agents (for usage tracking)
+                  const handoffChain = (executionContext as any)._handoffChain as string[];
+                  if (!handoffChain.includes(this.name)) {
+                    handoffChain.push(this.name);
                   }
 
                   currentAgent = nextAgent;
@@ -1576,6 +1661,65 @@ Good suggestions are:
       this.generateChatTitle(chatId, userMessage, writer, context).catch(
         (err) => logger.error("Title generation error", { error: err }),
       );
+    }
+  }
+
+  /**
+   * Build a usage tracking event from generation/stream results.
+   * Extracts context, usage, and metadata for tracking.
+   * @private
+   */
+  private buildUsageEvent(options: {
+    method: "generate" | "stream";
+    result?: AgentGenerateResult;
+    event?: any;
+    context?: Record<string, unknown>;
+    duration?: number;
+  }): UsageTrackingEvent {
+    const executionContext = options.context || {};
+
+    // For stream events, extract data from the event object
+    const usage = options.result?.usage || options.event?.usage;
+    const providerMetadata =
+      options.result?.providerMetadata || options.event?.providerMetadata;
+    const finishReason =
+      options.result?.finishReason || options.event?.finishReason;
+
+    // Extract handoff chain from context and include current agent
+    const existingChain = (executionContext._handoffChain as string[]) || [];
+    const handoffChain =
+      existingChain.length > 0 ? [...existingChain, this.name] : undefined;
+
+    return {
+      agentName: this.name,
+      sessionId: executionContext.sessionId as string | undefined,
+      handoffChain,
+      usage,
+      providerMetadata,
+      method: options.method,
+      finishReason,
+      duration: options.duration,
+      context: executionContext,
+    };
+  }
+
+  /**
+   * Invoke the global usage tracker if configured.
+   * Handles errors gracefully to prevent tracking from breaking generation.
+   * @private
+   */
+  private async invokeUsageTracker(event: UsageTrackingEvent): Promise<void> {
+    const config = getUsageTrackingConfig();
+    if (!config) return;
+
+    try {
+      await config.onUsage(event);
+    } catch (error) {
+      if (config.onError) {
+        config.onError(error as Error, event);
+      } else {
+        logger.error("Usage tracking failed", { error, event });
+      }
     }
   }
 
