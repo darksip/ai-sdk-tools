@@ -1,6 +1,8 @@
-# @ai-sdk-tools/cache
+# @fondation-io/cache
 
-[![npm version](https://badge.fury.io/js/@ai-sdk-tools%2Fcache.svg)](https://badge.fury.io/js/@ai-sdk-tools%2Fcache)
+> **🔱 Fork Notice**: This is part of the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork.
+
+[![npm version](https://badge.fury.io/js/@fondation-io%2Fcache.svg)](https://badge.fury.io/js/@fondation-io%2Fcache)
 
 Universal caching wrapper for AI SDK tools. Cache expensive tool executions with zero configuration - works with regular tools, streaming tools, and artifacts.
 
@@ -21,9 +23,9 @@ Caching provides:
 ## Installation
 
 ```bash
-npm install @ai-sdk-tools/cache
+npm install @fondation-io/cache
 # or
-bun add @ai-sdk-tools/cache
+bun add @fondation-io/cache
 ```
 
 ## Quick Start
@@ -32,7 +34,7 @@ bun add @ai-sdk-tools/cache
 
 ```typescript
 import { tool } from 'ai';
-import { createCached } from '@ai-sdk-tools/cache';
+import { createCached } from '@fondation-io/cache';
 import { z } from 'zod';
 
 // Your expensive tool
@@ -68,7 +70,7 @@ const result = await generateText({
 
 ```typescript
 import { Redis } from "@upstash/redis";
-import { createCached } from '@ai-sdk-tools/cache';
+import { createCached } from '@fondation-io/cache';
 
 // Just pass your Redis client!
 const cached = createCached({
@@ -83,7 +85,7 @@ const weatherTool = cached(expensiveWeatherTool);
 
 ```typescript
 import Redis from "redis";
-import { createCached } from '@ai-sdk-tools/cache';
+import { createCached } from '@fondation-io/cache';
 
 const cached = createCached({
   cache: Redis.createClient({ url: "redis://localhost:6379" }),
@@ -96,7 +98,7 @@ const cached = createCached({
 
 ```typescript
 import IORedis from "ioredis";
-import { createCached } from '@ai-sdk-tools/cache';
+import { createCached } from '@fondation-io/cache';
 
 const cached = createCached({
   cache: new IORedis("redis://localhost:6379"),
@@ -138,7 +140,7 @@ const cached = createCached({
 For apps with user/team context, just add `getContext` to the cache config:
 
 ```typescript
-import { cached } from '@ai-sdk-tools/cache';
+import { cached } from '@fondation-io/cache';
 // Your app's context system (could be React context, global state, etc.)
 
 const burnRateAnalysisTool = tool({
@@ -177,7 +179,7 @@ For consistent setup across your app, create a configured cache function:
 
 ```typescript
 // src/lib/cache.ts
-import { cached as baseCached, createCacheBackend } from '@ai-sdk-tools/cache';
+import { cached as baseCached, createCacheBackend } from '@fondation-io/cache';
 import { getContext } from '@/ai/context';
 
 // Create cache backend
@@ -211,7 +213,7 @@ export const myTool = cached(originalTool);
 ## Streaming Tools with Artifacts
 
 ```typescript
-import { createCached } from '@ai-sdk-tools/cache';
+import { createCached } from '@fondation-io/cache';
 
 // Complex streaming tool with artifacts
 const burnRateAnalysis = tool({
@@ -249,7 +251,7 @@ const cachedAnalysis = cached(burnRateAnalysis);
 ## Multiple Tools
 
 ```typescript
-import { cacheTools } from '@ai-sdk-tools/cache';
+import { cacheTools } from '@fondation-io/cache';
 
 // Cache multiple tools at once
 const { weather, calculator, database } = cacheTools({
@@ -336,3 +338,8 @@ Contributions are welcome! Please read our [contributing guide](../../CONTRIBUTI
 ## License
 
 MIT © [AI SDK Tools](https://github.com/ai-sdk-tools/ai-sdk-tools)
+## Acknowledgments
+
+This package is part of the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork of the original [AI SDK Tools](https://github.com/midday-ai/ai-sdk-tools) created by the [Midday](https://midday.ai) team.
+
+All credit for the original implementation goes to the original authors.

@@ -1,4 +1,6 @@
-# @ai-sdk-tools/store
+# @fondation-io/store
+
+> **🔱 Fork Notice**: This is part of the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork.
 
 A high-performance drop-in replacement for @ai-sdk/react with advanced state management, built-in optimizations, and zero configuration required.
 
@@ -15,9 +17,9 @@ A high-performance drop-in replacement for @ai-sdk/react with advanced state man
 ## Installation
 
 ```bash
-npm install @ai-sdk-tools/store
+npm install @fondation-io/store
 # or
-bun add @ai-sdk-tools/store
+bun add @fondation-io/store
 ```
 
 ## Debug Configuration
@@ -43,7 +45,7 @@ By default, debug logging is disabled unless `DEBUG=true` is set.
 ### 1. Wrap Your App
 
 ```tsx
-import { Provider } from '@ai-sdk-tools/store';
+import { Provider } from '@fondation-io/store';
 
 function App() {
   return (
@@ -57,7 +59,7 @@ function App() {
 ### 2. Use Chat Hooks
 
 ```tsx
-import { useChat, useChatMessages } from '@ai-sdk-tools/store';
+import { useChat, useChatMessages } from '@fondation-io/store';
 
 function ChatComponent() {
   // Same API as @ai-sdk/react, but 3-5x faster!
@@ -150,7 +152,7 @@ function Chat() {
 
 ### After:
 ```tsx
-import { Provider, useChat } from '@ai-sdk-tools/store';
+import { Provider, useChat } from '@fondation-io/store';
 
 function App() {
   return (
@@ -171,7 +173,7 @@ function Chat() {
 
 ## Performance Benchmarks
 
-| Scenario | @ai-sdk/react | @ai-sdk-tools/store | Improvement |
+| Scenario | @ai-sdk/react | @fondation-io/store | Improvement |
 |----------|---------------|---------------------|-------------|
 | 1000 messages | 120ms | 35ms | **3.4x faster** |
 | Message lookup | O(n) | O(1) | **10-100x faster** |
@@ -234,3 +236,9 @@ Contributions are welcome! See the [contributing guide](../../CONTRIBUTING.md) f
 ## License
 
 MIT
+
+## Acknowledgments
+
+This package is part of the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork of the original [AI SDK Tools](https://github.com/midday-ai/ai-sdk-tools) created by the [Midday](https://midday.ai) team.
+
+All credit for the original implementation goes to the original authors.

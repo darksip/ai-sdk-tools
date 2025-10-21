@@ -1,11 +1,15 @@
-# ai-sdk-tools
+# @fondation-io/ai-sdk-tools
+
+> **🔱 Fork Notice**
+>
+> This is a fork of the original [ai-sdk-tools](https://github.com/midday-ai/ai-sdk-tools) project, maintained and published under the `@fondation-io` npm scope.
 
 Complete toolkit for building advanced AI applications with the [Vercel AI SDK](https://sdk.vercel.ai/). This package provides everything you need: multi-agent orchestration, state management, caching, artifact streaming, development tools, and persistent memory.
 
 ## Installation
 
 ```bash
-npm install ai-sdk-tools
+npm install @fondation-io/ai-sdk-tools
 ```
 
 This installs all tools in a single package with namespaced exports.
@@ -34,7 +38,7 @@ This package includes all AI SDK tools:
 Import tools directly from the package:
 
 ```typescript
-import { Agent, artifact, cached, useChat, AIDevtools, InMemoryProvider } from 'ai-sdk-tools';
+import { Agent, artifact, cached, useChat, AIDevtools, InMemoryProvider } from '@fondation-io/ai-sdk-tools';
 ```
 
 ### Multi-Agent Orchestration
@@ -42,7 +46,7 @@ import { Agent, artifact, cached, useChat, AIDevtools, InMemoryProvider } from '
 Build intelligent workflows with specialized agents:
 
 ```typescript
-import { Agent } from 'ai-sdk-tools';
+import { Agent } from '@fondation-io/ai-sdk-tools';
 import { openai } from '@ai-sdk/openai';
 
 const supportAgent = new Agent({
@@ -71,7 +75,7 @@ const result = await supportAgent.generateText({
 Manage chat state globally with Zustand:
 
 ```typescript
-import { useChat } from 'ai-sdk-tools';
+import { useChat } from '@fondation-io/ai-sdk-tools';
 
 export const useChatHook = useChat({
   api: '/api/chat',
@@ -97,7 +101,7 @@ function ChatComponent() {
 Cache expensive tool executions to reduce costs and improve performance:
 
 ```typescript
-import { cached } from 'ai-sdk-tools';
+import { cached } from '@fondation-io/ai-sdk-tools';
 import { tool } from 'ai';
 import { z } from 'zod';
 
@@ -122,7 +126,7 @@ const weatherTool = cached(
 Stream structured artifacts from AI tools to React components:
 
 ```typescript
-import { artifact, useArtifact } from 'ai-sdk-tools';
+import { artifact, useArtifact } from '@fondation-io/ai-sdk-tools';
 import { z } from 'zod';
 
 const chartArtifact = artifact({
@@ -155,7 +159,7 @@ const { data, status } = useArtifact(chartArtifact);
 Debug and monitor your AI applications in real-time:
 
 ```typescript
-import { AIDevtools } from 'ai-sdk-tools';
+import { AIDevtools } from '@fondation-io/ai-sdk-tools';
 
 function App() {
   return (
@@ -172,7 +176,7 @@ function App() {
 Add long-term memory to your agents:
 
 ```typescript
-import { Agent, InMemoryProvider } from 'ai-sdk-tools';
+import { Agent, InMemoryProvider } from '@fondation-io/ai-sdk-tools';
 import { openai } from '@ai-sdk/openai';
 
 const memoryProvider = new InMemoryProvider();
@@ -192,21 +196,23 @@ const agent = new Agent({
 If you only need specific tools, you can install them individually:
 
 ```bash
-npm install @ai-sdk-tools/agents
-npm install @ai-sdk-tools/artifacts
-npm install @ai-sdk-tools/cache
-npm install @ai-sdk-tools/devtools
-npm install @ai-sdk-tools/memory
-npm install @ai-sdk-tools/store
+npm install @fondation-io/agents
+npm install @fondation-io/artifacts
+npm install @fondation-io/cache
+npm install @fondation-io/devtools
+npm install @fondation-io/memory
+npm install @fondation-io/store
+npm install @fondation-io/debug
 ```
 
 Each package can be used independently with its own API. See individual package documentation for details.
 
 ## Documentation
 
-- [Full Documentation](https://aisdk.tools)
-- [API Reference](https://aisdk.tools/docs)
-- [Examples](https://github.com/midday-ai/ai-sdk-tools/tree/main/apps/example)
+- [Original Documentation](https://aisdk.tools)
+- [Original API Reference](https://aisdk.tools/docs)
+- [Original Examples](https://github.com/midday-ai/ai-sdk-tools/tree/main/apps/example)
+- [Fork Repository](https://github.com/darksip/ai-sdk-tools)
 
 ## Features
 
@@ -228,11 +234,17 @@ Each package can be used independently with its own API. See individual package 
 
 ## License
 
-MIT © [Midday](https://midday.ai)
+MIT
 
 ## Links
 
-- [GitHub](https://github.com/midday-ai/ai-sdk-tools)
-- [Issues](https://github.com/midday-ai/ai-sdk-tools/issues)
-- [Discussions](https://github.com/midday-ai/ai-sdk-tools/discussions)
+- **Fork Repository**: [github.com/darksip/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools)
+- **Issues**: [github.com/darksip/ai-sdk-tools/issues](https://github.com/darksip/ai-sdk-tools/issues)
+- **Upstream Repository**: [github.com/midday-ai/ai-sdk-tools](https://github.com/midday-ai/ai-sdk-tools)
+
+## Acknowledgments
+
+This project is a fork of the excellent [AI SDK Tools](https://github.com/midday-ai/ai-sdk-tools) created by the [Midday](https://midday.ai) team. We are grateful for their work and contribution to the open-source community.
+
+All credit for the original implementation goes to the original authors. This fork is maintained independently under the `@fondation-io` scope.
 

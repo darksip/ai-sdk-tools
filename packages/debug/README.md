@@ -1,17 +1,19 @@
-# @ai-sdk-tools/debug
+# @fondation-io/debug
+
+> **🔱 Fork Notice**: This is part of the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork.
 
 Shared debug utilities for AI SDK Tools packages using Pino.
 
 ## Installation
 
 ```bash
-npm install @ai-sdk-tools/debug
+npm install @fondation-io/debug
 ```
 
 ## Usage
 
 ```typescript
-import { createLogger } from '@ai-sdk-tools/debug';
+import { createLogger } from '@fondation-io/debug';
 
 const logger = createLogger('AGENT');
 
@@ -55,3 +57,9 @@ logger.error(message: string, data?: any);
 
 MIT
 
+
+## Acknowledgments
+
+This package is part of the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork of the original [AI SDK Tools](https://github.com/midday-ai/ai-sdk-tools) created by the [Midday](https://midday.ai) team.
+
+All credit for the original implementation goes to the original authors.

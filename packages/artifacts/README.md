@@ -1,4 +1,6 @@
-# @ai-sdk-tools/artifacts
+# @fondation-io/artifacts
+
+> **🔱 Fork Notice**: This is part of the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork.
 
 Advanced streaming interfaces for AI applications. Create structured, type-safe artifacts that stream real-time updates from AI tools to React components.
 
@@ -7,19 +9,19 @@ Advanced streaming interfaces for AI applications. Create structured, type-safe 
 - **Type-Safe Streaming** - Full TypeScript support with Zod schema validation
 - **Real-time Updates** - Stream partial updates with progress tracking
 - **Clean API** - Minimal boilerplate, maximum flexibility
-- **State Management** - Built on @ai-sdk-tools/store for efficient message handling
+- **State Management** - Built on @fondation-io/store for efficient message handling
 - **Performance Optimized** - Efficient state management and updates
 
 ## Installation
 
 ```bash
-npm install @ai-sdk-tools/artifacts @ai-sdk-tools/store
+npm install @fondation-io/artifacts @fondation-io/store
 ```
 
 **Why do you need both packages?**
 
-- `@ai-sdk-tools/artifacts` - Provides the artifact streaming and management APIs
-- `@ai-sdk-tools/store` - Required for message state management and React hooks
+- `@fondation-io/artifacts` - Provides the artifact streaming and management APIs
+- `@fondation-io/store` - Required for message state management and React hooks
 
 The artifacts package uses the store package's `useChatMessages` hook to efficiently extract and track artifact data from AI SDK message streams, ensuring optimal performance and avoiding unnecessary re-renders.
 
@@ -28,7 +30,7 @@ The artifacts package uses the store package's `useChatMessages` hook to efficie
 ### 1. Initialize Chat with Store
 
 ```tsx
-import { useChat } from '@ai-sdk-tools/store'; // Drop-in replacement for @ai-sdk/react
+import { useChat } from '@fondation-io/store'; // Drop-in replacement for @ai-sdk/react
 import { DefaultChatTransport } from 'ai';
 
 function ChatComponent() {
@@ -57,7 +59,7 @@ The `useArtifact` hook automatically connects to the global chat store to extrac
 ### 1. Define an Artifact
 
 ```typescript
-import { artifact } from '@ai-sdk-tools/artifacts';
+import { artifact } from '@fondation-io/artifacts';
 import { z } from 'zod';
 
 const burnRateArtifact = artifact('burn-rate', z.object({
@@ -116,7 +118,7 @@ const analyzeBurnRate = {
 ### 3. Set Up Route with Context
 
 ```typescript
-import { createTypedContext, BaseContext } from '@ai-sdk-tools/artifacts';
+import { createTypedContext, BaseContext } from '@fondation-io/artifacts';
 import { createUIMessageStream, createUIMessageStreamResponse, streamText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 
@@ -160,7 +162,7 @@ export const POST = async (req: Request) => {
 ### 4. Consume in React
 
 ```tsx
-import { useArtifact } from '@ai-sdk-tools/artifacts/client';
+import { useArtifact } from '@fondation-io/artifacts/client';
 
 function Analysis() {
   const { data, status, progress, error } = useArtifact(burnRateArtifact, {
@@ -225,7 +227,7 @@ React hook for listening to all artifacts across all types. Perfect for implemen
 
 **Example:**
 ```tsx
-import { useArtifacts } from '@ai-sdk-tools/artifacts/client';
+import { useArtifacts } from '@fondation-io/artifacts/client';
 
 function ArtifactRenderer() {
   const { latest } = useArtifacts({
@@ -274,7 +276,7 @@ function Canvas() {
 You can use both hooks together for different purposes:
 
 ```tsx
-import { useArtifact, useArtifacts } from '@ai-sdk-tools/artifacts/client';
+import { useArtifact, useArtifacts } from '@fondation-io/artifacts/client';
 
 function DashboardWithAnalysis() {
   // Listen to all artifacts for notifications/logging
@@ -347,3 +349,9 @@ Contributions are welcome! See the [contributing guide](../../CONTRIBUTING.md) f
 ## License
 
 MIT
+
+## Acknowledgments
+
+This package is part of the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork of the original [AI SDK Tools](https://github.com/midday-ai/ai-sdk-tools) created by the [Midday](https://midday.ai) team.
+
+All credit for the original implementation goes to the original authors.

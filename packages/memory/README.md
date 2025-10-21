@@ -1,4 +1,6 @@
-# @ai-sdk-tools/memory
+# @fondation-io/memory
+
+> **🔱 Fork Notice**: This is part of the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork.
 
 Persistent memory system for AI agents with built-in providers for development and production.
 
@@ -14,13 +16,13 @@ Persistent memory system for AI agents with built-in providers for development a
 ## Installation
 
 ```bash
-npm install @ai-sdk-tools/memory
+npm install @fondation-io/memory
 # or
-yarn add @ai-sdk-tools/memory
+yarn add @fondation-io/memory
 # or
-pnpm add @ai-sdk-tools/memory
+pnpm add @fondation-io/memory
 # or
-bun add @ai-sdk-tools/memory
+bun add @fondation-io/memory
 ```
 
 ### Optional Dependencies
@@ -40,7 +42,7 @@ npm install @upstash/redis
 Perfect for local development - works immediately, no setup needed.
 
 ```typescript
-import { InMemoryProvider } from "@ai-sdk-tools/memory";
+import { InMemoryProvider } from "@fondation-io/memory";
 
 const memory = new InMemoryProvider();
 
@@ -65,7 +67,7 @@ Works with PostgreSQL, MySQL, and SQLite via Drizzle ORM. Perfect if you already
 import { drizzle } from "drizzle-orm/vercel-postgres";
 import { sql } from "@vercel/postgres";
 import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import { DrizzleProvider } from "@ai-sdk-tools/memory";
+import { DrizzleProvider } from "@fondation-io/memory";
 
 // Define your schema
 const workingMemory = pgTable("working_memory", {
@@ -102,7 +104,7 @@ Perfect for edge and serverless environments.
 
 ```typescript
 import { Redis } from "@upstash/redis";
-import { UpstashProvider } from "@ai-sdk-tools/memory";
+import { UpstashProvider } from "@fondation-io/memory";
 
 const redis = Redis.fromEnv();
 const memory = new UpstashProvider(redis);
@@ -111,7 +113,7 @@ const memory = new UpstashProvider(redis);
 ## Usage with Agents
 
 ```typescript
-import { InMemoryProvider } from "@ai-sdk-tools/memory";
+import { InMemoryProvider } from "@fondation-io/memory";
 
 const appContext = buildAppContext({
   userId: "user-123",
@@ -181,7 +183,7 @@ import type {
   WorkingMemory,
   ConversationMessage,
   MemoryScope,
-} from "@ai-sdk-tools/memory";
+} from "@fondation-io/memory";
 
 class MyProvider implements MemoryProvider {
   async getWorkingMemory(params: {
@@ -275,3 +277,9 @@ interface MemoryProvider {
 ## License
 
 MIT
+
+## Acknowledgments
+
+This package is part of the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork of the original [AI SDK Tools](https://github.com/midday-ai/ai-sdk-tools) created by the [Midday](https://midday.ai) team.
+
+All credit for the original implementation goes to the original authors.

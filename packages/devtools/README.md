@@ -2,7 +2,9 @@
 
 <br />
 
-# AI SDK Devtools
+# AI SDK Devtools (@fondation-io)
+
+> **🔱 Fork Notice**: This is part of the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork.
 
 A powerful debugging and monitoring tool for AI SDKs that provides real-time insights into AI streaming events, tool calls, and performance metrics.
 
@@ -16,12 +18,12 @@ AI SDK Devtools helps you debug and monitor AI applications by:
 - **Event filtering** - Filter events by type, tool name, or search queries
 - **Context insights** - Visualize token usage and context window utilization
 - **Stream interception** - Automatically capture events from AI SDK streams
-- **State management** - Optional integration with @ai-sdk-tools/store for state debugging
+- **State management** - Optional integration with @fondation-io/store for state debugging
 
 ## Installation
 
 ```bash
-npm install @ai-sdk-tools/devtools
+npm install @fondation-io/devtools
 ```
 
 ### Optional Store Integration
@@ -29,7 +31,7 @@ npm install @ai-sdk-tools/devtools
 For enhanced state debugging capabilities, you can optionally install the store package:
 
 ```bash
-npm install @ai-sdk-tools/store
+npm install @fondation-io/store
 ```
 
 The devtools will automatically detect and integrate with the store if available, but it works perfectly fine without it for basic event monitoring.
@@ -41,7 +43,7 @@ The devtools will automatically detect and integrate with the store if available
 ### Basic Usage
 
 ```tsx
-import { AIDevtools } from '@ai-sdk-tools/devtools';
+import { AIDevtools } from '@fondation-io/devtools';
 
 function App() {
   return (
@@ -59,7 +61,7 @@ function App() {
 
 ```tsx
 import { useChat } from 'ai/react';
-import { AIDevtools } from '@ai-sdk-tools/devtools';
+import { AIDevtools } from '@fondation-io/devtools';
 import { DefaultChatTransport } from 'ai';
 
 function ChatComponent() {
@@ -135,7 +137,7 @@ function ChatComponent() {
 ### Manual Event Integration
 
 ```tsx
-import { useAIDevtools } from '@ai-sdk-tools/devtools';
+import { useAIDevtools } from '@fondation-io/devtools';
 
 function MyComponent() {
   const { 
@@ -219,3 +221,9 @@ Contributions are welcome! See the [contributing guide](../../CONTRIBUTING.md) f
 ## License
 
 MIT
+
+## Acknowledgments
+
+This package is part of the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork of the original [AI SDK Tools](https://github.com/midday-ai/ai-sdk-tools) created by the [Midday](https://midday.ai) team.
+
+All credit for the original implementation goes to the original authors.
