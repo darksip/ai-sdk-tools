@@ -35,5 +35,9 @@
   "devDependencies": {
     "@biomejs/biome": "^2.2.6",
     "@changesets/cli": "^2.29.7"
+  },
+  "dependencies": {
+    "@openrouter/ai-sdk-provider": "^1.2.0",
+    "ai": "^5.0.76"
   }
 }
