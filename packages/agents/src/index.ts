@@ -85,3 +85,11 @@ export {
   type UsageAccumulatorOptions,
   type AccumulatedUsage,
 } from "./utils/openrouter-usage.js";
+// Usage tracking configuration
+export {
+  configureUsageTracking,
+  resetUsageTracking,
+  type UsageTrackingEvent,
+  type UsageTrackingHandler,
+  type UsageTrackingConfig,
+} from "./usage-tracking-config.js";

@@ -427,6 +427,44 @@ const agent = new Agent({
 });
 ```
 
+### Usage Tracking
+
+Automatically track token usage and costs across all agents with global configuration:
+
+```typescript
+import { configureUsageTracking, extractOpenRouterUsage } from '@fondation-io/agents';
+
+// Configure once at app startup
+configureUsageTracking({
+  onUsage: async (event) => {
+    // Automatically tracks all agent.generate() and agent.stream() calls
+    await db.usage.create({
+      agentName: event.agentName,
+      sessionId: event.sessionId,
+      tokens: event.usage?.totalTokens || 0,
+      cost: extractOpenRouterUsage({ providerMetadata: event.providerMetadata })?.cost || 0,
+      timestamp: new Date(),
+    });
+  },
+  onError: (error, event) => {
+    console.error('Tracking failed:', error);
+  }
+});
+
+// Then use agents normally - tracking happens automatically
+const result = await agent.generate({ prompt: "Hello" });
+const stream = agent.stream({ prompt: "Hello" });
+```
+
+**Key features:**
+- Works with all AI providers (OpenAI, Anthropic, OpenRouter, etc.)
+- Tracks multi-agent handoffs with full chain context
+- Async, non-blocking (never delays responses)
+- Includes session context and custom metadata
+- Type-safe event structure
+
+See the [Usage Tracking Guide](./docs/guides/usage-tracking-configuration.md) for complete documentation and examples.
+
 ## Complex Multi-Agent Example
 
 Here's a real-world example: determining if a user can afford a Tesla Model Y by combining web research and financial analysis:

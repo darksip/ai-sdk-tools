@@ -2,6 +2,41 @@
 
 ### Added
 
+- **Global Usage Tracking Configuration**: Automatic usage tracking across all agents without repetitive callback injection
+
+  **Core Functions**:
+  - `configureUsageTracking(config)` - Set up global usage tracking for all agent operations
+  - `resetUsageTracking()` - Clear global tracking configuration (useful for testing)
+
+  **Types**:
+  - `UsageTrackingEvent` - Comprehensive event with agent name, session ID, handoff chain, usage metrics, provider metadata, method, finish reason, duration, and context
+  - `UsageTrackingHandler` - Async callback function invoked for each usage event
+  - `UsageTrackingConfig` - Configuration object with `onUsage` handler and optional `onError` callback
+
+  **Features**:
+  - Automatic tracking in both `agent.generate()` and `agent.stream()` methods
+  - Multi-agent handoff tracking with full chain context (`handoffChain` field)
+  - Session and context propagation (extracts `sessionId` from execution context)
+  - Provider-agnostic (works with OpenAI, Anthropic, OpenRouter, and all AI SDK providers)
+  - Error isolation (tracking failures never break generation)
+  - Async, non-blocking execution (tracking doesn't delay responses)
+  - Type-safe event structure with complete metadata
+
+  **Documentation & Examples**:
+  - 4 comprehensive examples in `src/examples/usage-tracking/`:
+    - `basic-tracking.ts` - Simple console logging (OpenAI)
+    - `openrouter-cost-tracking.ts` - Real-time cost monitoring with OpenRouter budget alerts
+    - `database-persistence.ts` - PostgreSQL/MySQL persistence with OpenRouter cost extraction
+    - `multi-agent-tracking.ts` - Multi-agent handoff workflows with per-agent cost attribution (OpenRouter)
+  - Complete guide at `/docs/guides/usage-tracking-configuration.md`
+  - README section with quick start and key features
+
+  **Use Cases**:
+  - Cost monitoring and budget enforcement
+  - User/session-level billing and attribution
+  - Analytics and usage pattern analysis
+  - Real-time budget alerts
+
 - **OpenRouter Native Support**: First-class integration with type-safe utilities for cost tracking and budget monitoring
 
   **Type Definitions**:
