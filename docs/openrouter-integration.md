@@ -4,6 +4,11 @@
 >
 > Ce document explique comment utiliser le provider OpenRouter avec AI SDK v5 dans vos applications, y compris avec les packages [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools).
 
+> **🆕 Native Support Update**
+>
+> `@fondation-io/agents` now includes native OpenRouter utilities for type-safe usage tracking and budget monitoring!
+> See the [Native Support Guide](/docs/guides/openrouter-native-support.md) for the simplified API.
+
 ## Vue d'ensemble
 
 OpenRouter est un provider qui donne accès à **plus de 300 modèles de langage** via une API unifiée compatible avec AI SDK v5. Il permet d'utiliser des modèles de différents fournisseurs (OpenAI, Anthropic, Google, Meta, etc.) avec une seule clé API.
@@ -15,10 +20,13 @@ OpenRouter est un provider qui donne accès à **plus de 300 modèles de langage
 - ✅ Support complet d'AI SDK v5
 - ✅ Prompt caching (Anthropic)
 - ✅ Usage tracking intégré
+- ✅ **Type-safe utilities in @fondation-io/agents**
 
 **Repository**: https://github.com/OpenRouterTeam/ai-sdk-provider
 **NPM**: `@openrouter/ai-sdk-provider`
 **License**: Apache-2.0
+
+**Native Support**: See `/docs/guides/openrouter-native-support.md` for type-safe utilities and examples.
 
 ---
 

@@ -608,6 +608,101 @@ type AgentEvent =
   | { type: 'agent-error'; error: Error }
 ```
 
+## OpenRouter Support
+
+`@fondation-io/agents` includes native support for [OpenRouter](https://openrouter.ai), providing access to 300+ AI models through a single API with built-in cost tracking and type safety.
+
+### Quick Start
+
+```typescript
+import { openrouter } from '@openrouter/ai-sdk-provider';
+import { Agent, extractOpenRouterUsage, formatCost } from '@fondation-io/agents';
+
+const agent = new Agent({
+  name: 'Assistant',
+  model: openrouter('openai/gpt-4o-mini'),
+  instructions: 'You are a helpful assistant.'
+});
+
+const result = await agent.generate({
+  prompt: 'Explain TypeScript in one sentence.'
+});
+
+// Extract usage metrics
+const usage = extractOpenRouterUsage(result);
+if (usage) {
+  console.log('Cost:', formatCost(usage.cost));
+  console.log('Tokens:', usage.totalTokens);
+}
+```
+
+### Features
+
+- **Type Definitions** - `OpenRouterUsage`, `OpenRouterMetadata`, `OpenRouterProviderOptions`
+- **Usage Extraction** - `extractOpenRouterUsage()`, `extractOpenRouterUsageWithDefaults()`
+- **Formatting** - `formatCost()`, `formatTokens()`, `summarizeUsage()`
+- **Budget Tracking** - `UsageAccumulator` for multi-request cost monitoring
+- **TypeScript Support** - Full autocomplete for providerOptions
+
+### Streaming Usage
+
+With streaming, usage is only available in the `onFinish` callback:
+
+```typescript
+import { streamText } from 'ai';
+
+let usage = null;
+
+const result = streamText({
+  model: openrouter('openai/gpt-4o'),
+  prompt: 'Hello',
+  onFinish: (event) => {
+    usage = extractOpenRouterUsage(event);
+  }
+});
+
+for await (const chunk of result.textStream) {
+  process.stdout.write(chunk);
+}
+
+if (usage) {
+  console.log('Cost:', formatCost(usage.cost));
+}
+```
+
+### Budget Monitoring
+
+```typescript
+import { UsageAccumulator } from '@fondation-io/agents';
+
+const accumulator = new UsageAccumulator({ maxCost: 1.00 });
+
+for (const prompt of prompts) {
+  const result = await streamText({
+    model: openrouter('openai/gpt-3.5-turbo'),
+    prompt,
+    onFinish: (event) => {
+      const usage = extractOpenRouterUsage(event);
+      if (usage) {
+        accumulator.add(usage); // Throws if budget exceeded
+      }
+    }
+  });
+
+  for await (const chunk of result.textStream) {
+    process.stdout.write(chunk);
+  }
+}
+
+console.log(accumulator.summarize({ detailed: true }));
+```
+
+### Documentation
+
+- **Native Support Guide**: `/docs/guides/openrouter-native-support.md`
+- **Comprehensive Guide**: `/docs/openrouter-integration.md`
+- **Examples**: `packages/agents/src/examples/openrouter/`
+
 ## Integration with Other Packages
 
 ### With @fondation-io/cache
