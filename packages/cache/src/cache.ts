@@ -118,7 +118,7 @@ function createStreamingCachedTool<T extends Tool>(
           // Writer comes from AI SDK's experimental_context
           if (!writer) {
             try {
-              const { getWriter } = await import("@ai-sdk-tools/artifacts");
+              const { getWriter } = await import("@fondation-io/artifacts");
               writer = getWriter(executionOptions);
             } catch {
               // Artifacts package not available or writer not available
@@ -174,7 +174,7 @@ function createStreamingCachedTool<T extends Tool>(
       // Writer comes from AI SDK's experimental_context
       if (!writer) {
         try {
-          const { getWriter } = await import("@ai-sdk-tools/artifacts");
+          const { getWriter } = await import("@fondation-io/artifacts");
           writer = getWriter(executionOptions);
         } catch {
           // Artifacts package not available or writer not available
@@ -604,7 +604,7 @@ export function cacheTools<T extends Record<string, Tool>>(
  * Example usage:
  * ```ts
  * import { Redis } from "@upstash/redis";
- * import { createCached } from "@ai-sdk-tools/cache";
+ * import { createCached } from "@fondation-io/cache";
  *
  * // Upstash Redis
  * const cached = createCached({ cache: Redis.fromEnv() });

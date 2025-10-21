@@ -22,7 +22,7 @@ export default function AgentsDocsContent() {
               <strong className="text-[#d4d4d4]"> Includes built-in memory system for persistent context.</strong>
             </p>
 
-            <InstallScriptTabs packageName="@ai-sdk-tools/agents @ai-sdk-tools/memory ai zod" />
+            <InstallScriptTabs packageName="@fondation-io/agents @fondation-io/memory ai zod" />
           </div>
         </section>
 
@@ -172,8 +172,8 @@ export default function AgentsDocsContent() {
                 className="text-sm font-mono leading-relaxed"
                 dangerouslySetInnerHTML={{
                   __html:
-                    highlight(`import { Agent } from '@ai-sdk-tools/agents'
-import { InMemoryProvider } from '@ai-sdk-tools/memory'
+                    highlight(`import { Agent } from '@fondation-io/agents'
+import { InMemoryProvider } from '@fondation-io/memory'
 import { openai } from '@ai-sdk/openai'
 
 const agent = new Agent({
@@ -225,7 +225,7 @@ const agent = new Agent({
                     className="text-sm font-mono leading-relaxed"
                     dangerouslySetInnerHTML={{
                       __html:
-                        highlight(`import { Agent } from '@ai-sdk-tools/agents'
+                        highlight(`import { Agent } from '@fondation-io/agents'
 import { openai } from '@ai-sdk/openai'
 
 const agent = new Agent({
@@ -255,7 +255,7 @@ console.log(result.text) // "4"`),
                     className="text-sm font-mono leading-relaxed"
                     dangerouslySetInnerHTML={{
                       __html:
-                        highlight(`import { Agent } from '@ai-sdk-tools/agents'
+                        highlight(`import { Agent } from '@fondation-io/agents'
 import { openai } from '@ai-sdk/openai'
 
 // Create specialized agents
@@ -350,7 +350,7 @@ const result = await orchestrator.generate({
                 className="text-sm font-mono leading-relaxed"
                 dangerouslySetInnerHTML={{
                   __html: highlight(`// app/api/chat/route.ts
-import { Agent } from '@ai-sdk-tools/agents'
+import { Agent } from '@fondation-io/agents'
 import { openai } from '@ai-sdk/openai'
 
 const supportAgent = new Agent({
@@ -710,7 +710,7 @@ const pipeline = new Agent({
             <div className="space-y-8">
               <div>
                 <h3 className="text-xl font-normal mb-4">
-                  With @ai-sdk-tools/memory
+                  With @fondation-io/memory
                 </h3>
                 <p className="text-sm text-secondary mb-4">
                   Add persistent working memory and conversation history to
@@ -721,7 +721,7 @@ const pipeline = new Agent({
                     className="text-sm font-mono leading-relaxed"
                     dangerouslySetInnerHTML={{
                       __html:
-                        highlight(`import { DrizzleProvider } from '@ai-sdk-tools/memory'
+                        highlight(`import { DrizzleProvider } from '@fondation-io/memory'
 
 const agent = new Agent({
   name: 'Assistant',
@@ -766,7 +766,7 @@ const agent = new Agent({
 
               <div>
                 <h3 className="text-xl font-normal mb-4">
-                  With @ai-sdk-tools/cache
+                  With @fondation-io/cache
                 </h3>
                 <p className="text-sm text-secondary mb-4">
                   Cache expensive tool calls across agents:
@@ -776,7 +776,7 @@ const agent = new Agent({
                     className="text-sm font-mono leading-relaxed"
                     dangerouslySetInnerHTML={{
                       __html:
-                        highlight(`import { cached } from '@ai-sdk-tools/cache'
+                        highlight(`import { cached } from '@fondation-io/cache'
 
 const agent = new Agent({
   name: 'Data Agent',
@@ -794,7 +794,7 @@ const agent = new Agent({
 
               <div>
                 <h3 className="text-xl font-normal mb-4">
-                  With @ai-sdk-tools/artifacts
+                  With @fondation-io/artifacts
                 </h3>
                 <p className="text-sm text-secondary mb-4">
                   Stream structured artifacts from agents:
@@ -804,7 +804,7 @@ const agent = new Agent({
                     className="text-sm font-mono leading-relaxed"
                     dangerouslySetInnerHTML={{
                       __html:
-                        highlight(`import { artifact } from '@ai-sdk-tools/artifacts'
+                        highlight(`import { artifact } from '@fondation-io/artifacts'
 
 const reportAgent = new Agent({
   name: 'Report Generator',
@@ -827,7 +827,7 @@ const reportAgent = new Agent({
 
               <div>
                 <h3 className="text-xl font-normal mb-4">
-                  With @ai-sdk-tools/devtools
+                  With @fondation-io/devtools
                 </h3>
                 <p className="text-sm text-secondary mb-4">
                   Debug agent execution in development:
@@ -837,7 +837,7 @@ const reportAgent = new Agent({
                     className="text-sm font-mono leading-relaxed"
                     dangerouslySetInnerHTML={{
                       __html:
-                        highlight(`import { AIDevTools } from '@ai-sdk-tools/devtools'
+                        highlight(`import { AIDevTools } from '@fondation-io/devtools'
 
 const agent = new Agent({
   name: 'Debug Agent',

@@ -89,7 +89,7 @@ export default function DocsContent() {
               className="group border border-[#2a2a2a] hover:border-[#404040] transition-colors p-8"
             >
               <h3 className="text-lg font-medium mb-4 group-hover:text-white transition-colors">
-                @ai-sdk-tools/agents
+                @fondation-io/agents
               </h3>
               <p className="text-sm text-secondary mb-6">
                 Multi-agent orchestration with automatic handoffs and routing.
@@ -106,7 +106,7 @@ export default function DocsContent() {
               className="group border border-[#2a2a2a] hover:border-[#404040] transition-colors p-8"
             >
               <h3 className="text-lg font-medium mb-4 group-hover:text-white transition-colors">
-                @ai-sdk-tools/store
+                @fondation-io/store
               </h3>
               <p className="text-sm text-secondary mb-6">
                 Global state management for AI applications. Drop-in replacement
@@ -122,7 +122,7 @@ export default function DocsContent() {
               className="group border border-[#2a2a2a] hover:border-[#404040] transition-colors p-8"
             >
               <h3 className="text-lg font-medium mb-4 group-hover:text-white transition-colors">
-                @ai-sdk-tools/devtools
+                @fondation-io/devtools
               </h3>
               <p className="text-sm text-secondary mb-6">
                 Powerful debugging and monitoring tool for AI applications with
@@ -138,7 +138,7 @@ export default function DocsContent() {
               className="group border border-[#2a2a2a] hover:border-[#404040] transition-colors p-8"
             >
               <h3 className="text-lg font-medium mb-4 group-hover:text-white transition-colors">
-                @ai-sdk-tools/artifacts
+                @fondation-io/artifacts
               </h3>
               <p className="text-sm text-secondary mb-6">
                 Advanced streaming interfaces for AI applications with
@@ -154,7 +154,7 @@ export default function DocsContent() {
               className="group border border-[#2a2a2a] hover:border-[#404040] transition-colors p-8"
             >
               <h3 className="text-lg font-medium mb-4 group-hover:text-white transition-colors">
-                @ai-sdk-tools/cache
+                @fondation-io/cache
               </h3>
               <p className="text-sm text-secondary mb-6">
                 Universal caching for AI SDK tools. Cache expensive operations

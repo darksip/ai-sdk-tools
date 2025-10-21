@@ -24,7 +24,7 @@ export default function MemoryContent() {
             </p>
 
             {/* Terminal */}
-            <InstallScriptTabs packageName="@ai-sdk-tools/memory" />
+            <InstallScriptTabs packageName="@fondation-io/memory" />
 
             {/* Used by */}
             <div className="space-y-6 max-w-xl">
@@ -66,8 +66,8 @@ export default function MemoryContent() {
                 className="text-xs font-mono leading-relaxed"
                 dangerouslySetInnerHTML={{
                   __html:
-                    highlight(`import { Agent } from '@ai-sdk-tools/agents'
-import { DrizzleProvider } from '@ai-sdk-tools/memory'
+                    highlight(`import { Agent } from '@fondation-io/agents'
+import { DrizzleProvider } from '@fondation-io/memory'
 
 const agent = new Agent({
   name: 'Assistant',
@@ -163,7 +163,7 @@ const agent = new Agent({
                   className="text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html:
-                      highlight(`import { InMemoryProvider } from '@ai-sdk-tools/memory'
+                      highlight(`import { InMemoryProvider } from '@fondation-io/memory'
 
 const memory = new InMemoryProvider()
 
@@ -188,7 +188,7 @@ const memory = new InMemoryProvider()
                   className="text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html:
-                      highlight(`import { DrizzleProvider } from '@ai-sdk-tools/memory'
+                      highlight(`import { DrizzleProvider } from '@fondation-io/memory'
 
 const memory = new DrizzleProvider(db, {
   workingMemoryTable,
@@ -215,7 +215,7 @@ const memory = new DrizzleProvider(db, {
                   className="text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html:
-                      highlight(`import { UpstashProvider } from '@ai-sdk-tools/memory'
+                      highlight(`import { UpstashProvider } from '@fondation-io/memory'
 import { Redis } from '@upstash/redis'
 
 const memory = new UpstashProvider(
@@ -296,10 +296,10 @@ const memory = new UpstashProvider(
             <div className="text-sm flex items-center justify-between">
               <div>
                 <span className="text-secondary">git: (main)$ </span>
-                <span className="text-white">npm i @ai-sdk-tools/memory</span>
+                <span className="text-white">npm i @fondation-io/memory</span>
               </div>
               <CopyButton
-                text="npm i @ai-sdk-tools/memory"
+                text="npm i @fondation-io/memory"
                 className="ml-4 hover:text-white"
                 size={16}
               />

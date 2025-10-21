@@ -1,7 +1,7 @@
 import type {
   AgentDataParts,
   AgentUIMessage as BaseAgentUIMessage,
-} from "ai-sdk-tools";
+} from "@fondation-io/ai-sdk-tools";
 
 /**
  * Extended agent status type with application-specific agent names

@@ -1,6 +1,6 @@
 {
-  "name": "@ai-sdk-tools/store",
-  "version": "0.8.2",
+  "name": "@fondation-io/store",
+  "version": "1.0.0",
   "description": "A drop-in replacement for @ai-sdk/react that automatically syncs chat state to Zustand stores",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -42,6 +42,7 @@
     "zustand": ">=5.0.0"
   },
   "devDependencies": {
+    "@types/node": "^24.7.2",
     "@types/react": "^19.2.2",
     "react": "^19.2.0",
     "tsup": "^8.5.0",
@@ -51,12 +52,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/midday-ai/ai-sdk-tools.git"
+    "url": "https://github.com/darksip/ai-sdk-tools.git"
   },
   "bugs": {
-    "url": "https://github.com/midday-ai/ai-sdk-tools/issues"
+    "url": "https://github.com/darksip/ai-sdk-tools/issues"
   },
-  "homepage": "https://github.com/midday-ai/ai-sdk-tools#readme",
+  "homepage": "https://github.com/darksip/ai-sdk-tools#readme",
   "publishConfig": {
     "access": "public"
   },

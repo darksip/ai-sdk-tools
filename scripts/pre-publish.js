@@ -23,8 +23,11 @@ function getPackageVersion(packageName) {
 
 // Define which packages depend on which other packages
 const packageDependencies = {
+  memory: ["debug"],
   artifacts: ["store"],
   devtools: ["store"],
+  agents: ["debug", "memory"],
+  "ai-sdk-tools": ["store", "artifacts", "devtools", "memory", "agents", "cache"],
 };
 
 // Generate dynamic package configurations
@@ -32,7 +35,7 @@ const packages = Object.entries(packageDependencies).map(
   ([packageName, deps]) => {
     const dependencies = {};
     deps.forEach((dep) => {
-      dependencies[`@ai-sdk-tools/${dep}`] = `^${getPackageVersion(dep)}`;
+      dependencies[`@fondation-io/${dep}`] = `^${getPackageVersion(dep)}`;
     });
     return { name: packageName, dependencies };
   },

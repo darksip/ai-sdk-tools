@@ -21,7 +21,7 @@ export default function CacheContent() {
               streaming tools, and artifacts.
             </p>
 
-            <InstallScriptTabs packageName="@ai-sdk-tools/cache" />
+            <InstallScriptTabs packageName="@fondation-io/cache" />
           </div>
         </section>
 
@@ -35,7 +35,7 @@ export default function CacheContent() {
                   className="text-sm font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html:
-                      highlight(`import { cached } from '@ai-sdk-tools/cache'
+                      highlight(`import { cached } from '@fondation-io/cache'
 
 const expensiveWeatherTool = tool({
   description: 'Get weather data',
@@ -145,7 +145,7 @@ const weatherTool = cached(expensiveWeatherTool)
                     className="text-sm font-mono leading-relaxed"
                     dangerouslySetInnerHTML={{
                       __html:
-                        highlight(`import { cached } from '@ai-sdk-tools/cache'
+                        highlight(`import { cached } from '@fondation-io/cache'
 
 // Uses LRU cache automatically
 const weatherTool = cached(expensiveWeatherTool, {
@@ -167,7 +167,7 @@ const weatherTool = cached(expensiveWeatherTool, {
                     className="text-sm font-mono leading-relaxed"
                     dangerouslySetInnerHTML={{
                       __html:
-                        highlight(`import { createCachedFunction, createCacheBackend } from '@ai-sdk-tools/cache'
+                        highlight(`import { createCachedFunction, createCacheBackend } from '@fondation-io/cache'
 import Redis from 'redis'
 
 const redis = Redis.createClient({

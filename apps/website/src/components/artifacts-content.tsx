@@ -51,7 +51,7 @@ export function ArtifactsContent() {
 
             {/* Terminal */}
 
-            <InstallScriptTabs packageName="@ai-sdk-tools/artifacts @ai-sdk-tools/store" />
+            <InstallScriptTabs packageName="@fondation-io/artifacts @fondation-io/store" />
 
             {/* Used by */}
             <div className="space-y-6 max-w-xl">
@@ -290,7 +290,7 @@ export function ArtifactsContent() {
             <div className="space-y-2">
               <h3 className="text-base font-medium mb-3">Global State</h3>
               <p className="text-xs text-secondary font-light leading-relaxed">
-                Built on @ai-sdk-tools/store for global state access - no prop
+                Built on @fondation-io/store for global state access - no prop
                 drilling required.
               </p>
             </div>
@@ -318,7 +318,7 @@ export function ArtifactsContent() {
                   className="text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html:
-                      highlight(`import { artifact } from '@ai-sdk-tools/artifacts'
+                      highlight(`import { artifact } from '@fondation-io/artifacts'
 import { z } from 'zod'
 import { tool } from 'ai'
 
@@ -379,7 +379,7 @@ export const analyzeDashboardTool = tool({
                   className="text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html:
-                      highlight(`import { useArtifact } from '@ai-sdk-tools/artifacts'
+                      highlight(`import { useArtifact } from '@fondation-io/artifacts'
 import { useState } from 'react'
 
 function DashboardComponent() {
@@ -429,7 +429,7 @@ function DashboardComponent() {
               Artifacts requires the store package to work properly, so make
               sure to install both.
             </p>
-            <InstallScriptTabs packageName="@ai-sdk-tools/artifacts @ai-sdk-tools/store" />
+            <InstallScriptTabs packageName="@fondation-io/artifacts @fondation-io/store" />
           </div>
           <p className="text-xs text-[#555555] font-light">
             Comprehensive artifact handling for AI applications.

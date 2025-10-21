@@ -5,7 +5,7 @@
 // Check if store package is available
 export function isStorePackageAvailable(): boolean {
   try {
-    require("@ai-sdk-tools/store");
+    require("@fondation-io/store");
     return true;
   } catch {
     return false;

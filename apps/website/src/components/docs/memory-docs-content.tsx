@@ -19,10 +19,10 @@ export default function MemoryDocsContent() {
               Persistent memory system for AI agents with built-in providers for
               development and production. Working memory, conversation history,
               and chat persistence with a simple 4-method interface. 
-              <strong className="text-[#d4d4d4]"> Required dependency for @ai-sdk-tools/agents.</strong>
+              <strong className="text-[#d4d4d4]"> Required dependency for @fondation-io/agents.</strong>
             </p>
 
-            <InstallScriptTabs packageName="@ai-sdk-tools/memory" />
+            <InstallScriptTabs packageName="@fondation-io/memory" />
           </div>
         </section>
 
@@ -101,8 +101,8 @@ export default function MemoryDocsContent() {
                 className="text-xs font-mono leading-relaxed"
                 dangerouslySetInnerHTML={{
                   __html:
-                    highlight(`import { InMemoryProvider } from '@ai-sdk-tools/memory'
-import { Agent } from '@ai-sdk-tools/agents'
+                    highlight(`import { InMemoryProvider } from '@fondation-io/memory'
+import { Agent } from '@fondation-io/agents'
 
 const memory = new InMemoryProvider()
 
@@ -154,7 +154,7 @@ const agent = new Agent({
                     highlight(`import { drizzle } from 'drizzle-orm/vercel-postgres'
 import { sql } from '@vercel/postgres'
 import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
-import { DrizzleProvider } from '@ai-sdk-tools/memory'
+import { DrizzleProvider } from '@fondation-io/memory'
 
 // Define your schema
 const workingMemory = pgTable('working_memory', {
@@ -208,7 +208,7 @@ const memory = new DrizzleProvider(db, {
                 className="text-xs font-mono leading-relaxed"
                 dangerouslySetInnerHTML={{
                   __html: highlight(`import { Redis } from '@upstash/redis'
-import { UpstashProvider } from '@ai-sdk-tools/memory'
+import { UpstashProvider } from '@fondation-io/memory'
 
 const redis = Redis.fromEnv()
 const memory = new UpstashProvider(redis)`),
@@ -229,7 +229,7 @@ const memory = new UpstashProvider(redis)`),
                 href="/docs/agents"
                 className="text-[#d4d4d4] hover:underline"
               >
-                @ai-sdk-tools/agents
+                @fondation-io/agents
               </Link>
               . The agent automatically handles:
             </p>
@@ -263,8 +263,8 @@ const memory = new UpstashProvider(redis)`),
                 className="text-xs font-mono leading-relaxed"
                 dangerouslySetInnerHTML={{
                   __html:
-                    highlight(`import { Agent } from '@ai-sdk-tools/agents'
-import { DrizzleProvider } from '@ai-sdk-tools/memory'
+                    highlight(`import { Agent } from '@fondation-io/agents'
+import { DrizzleProvider } from '@fondation-io/memory'
 
 const agent = new Agent({
   name: 'Financial Assistant',
@@ -448,7 +448,7 @@ interface ConversationMessage {
   WorkingMemory, 
   ConversationMessage,
   MemoryScope 
-} from '@ai-sdk-tools/memory'
+} from '@fondation-io/memory'
 
 class MyCustomProvider implements MemoryProvider {
   async getWorkingMemory(params: {
@@ -514,8 +514,8 @@ class MyCustomProvider implements MemoryProvider {
                 className="text-xs font-mono leading-relaxed"
                 dangerouslySetInnerHTML={{
                   __html: highlight(`// app/api/chat/route.ts
-import { Agent } from '@ai-sdk-tools/agents'
-import { DrizzleProvider } from '@ai-sdk-tools/memory'
+import { Agent } from '@fondation-io/agents'
+import { DrizzleProvider } from '@fondation-io/memory'
 import { openai } from '@ai-sdk/openai'
 
 const memory = new DrizzleProvider(db)
@@ -554,7 +554,7 @@ export async function POST(req: Request) {
 }
 
 // Client usage
-import { useChat } from '@ai-sdk-tools/store'
+import { useChat } from '@fondation-io/store'
 
 function ChatComponent() {
   const { messages, sendMessage } = useChat({

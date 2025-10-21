@@ -10,8 +10,8 @@
  */
 
 // Client-side artifact hooks
-export * from "@ai-sdk-tools/artifacts/client";
+export * from "@fondation-io/artifacts/client";
 // Devtools components
-export * from "@ai-sdk-tools/devtools";
+export * from "@fondation-io/devtools";
 // Store hooks and state management
-export * from "@ai-sdk-tools/store";
+export * from "@fondation-io/store";

@@ -5,7 +5,7 @@
  */
 
 import type { Agent } from "./types.js";
-import { createLogger } from "@ai-sdk-tools/debug";
+import { createLogger } from "@fondation-io/debug";
 
 const logger = createLogger('ROUTING');
 

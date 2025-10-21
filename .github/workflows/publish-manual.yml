@@ -1,0 +1,136 @@
+name: Manual Publish (OIDC)
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Type de release'
+        required: true
+        default: 'stable'
+        type: choice
+        options:
+          - stable
+          - beta
+      dry_run:
+        description: 'Dry run (ne publie pas réellement)'
+        required: false
+        default: false
+        type: boolean
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  publish:
+    name: Publish to NPM
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Requis pour OIDC/Trusted Publishers
+      contents: write  # Requis pour créer les tags Git
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Nécessaire pour les changelogs
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Setup Node.js (pour npm publish avec OIDC)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build all packages
+        run: bun run build
+
+      - name: Enter beta mode (si beta release)
+        if: inputs.release_type == 'beta'
+        run: bun run changeset:beta
+
+      - name: Version packages
+        run: |
+          if [ "${{ inputs.release_type }}" = "beta" ]; then
+            bun run version-packages:beta
+          else
+            bun run version-packages
+          fi
+
+      - name: Prepare packages for publishing
+        run: node scripts/pre-publish.js prepare
+
+      - name: Publish to NPM (Dry Run)
+        if: inputs.dry_run == true
+        run: |
+          echo "🔍 DRY RUN MODE - Les packages ne seront PAS publiés"
+          echo ""
+          echo "Packages qui seraient publiés:"
+          npm publish --dry-run --workspaces --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to NPM (Real)
+        if: inputs.dry_run == false
+        run: |
+          echo "📦 Publication des packages sur NPM..."
+
+          # Ordre de publication (selon les dépendances)
+          PACKAGES=(
+            "packages/debug"
+            "packages/store"
+            "packages/memory"
+            "packages/cache"
+            "packages/artifacts"
+            "packages/devtools"
+            "packages/agents"
+            "packages/ai-sdk-tools"
+          )
+
+          for pkg in "${PACKAGES[@]}"; do
+            if [ -d "$pkg" ]; then
+              echo "Publishing $pkg..."
+              cd "$pkg"
+              npm publish --access public --provenance || echo "⚠️  $pkg already published or failed"
+              cd ../..
+            fi
+          done
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Restore packages to development mode
+        if: always()
+        run: node scripts/pre-publish.js restore
+
+      - name: Exit beta mode
+        if: always() && inputs.release_type == 'beta'
+        run: bun run changeset:exit-beta
+
+      - name: Commit version changes
+        if: inputs.dry_run == false
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "chore: release packages [skip ci]" || echo "No changes to commit"
+          git push origin main --follow-tags || echo "Nothing to push"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## 📦 Publication Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release Type:** ${{ inputs.release_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry Run:** ${{ inputs.dry_run }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ inputs.dry_run }}" = "false" ]; then
+            echo "✅ Packages publiés sur NPM avec provenance OIDC" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ Mode dry-run - Aucun package n'a été publié" >> $GITHUB_STEP_SUMMARY
+          fi

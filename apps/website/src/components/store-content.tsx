@@ -23,7 +23,7 @@ export function StoreContent() {
             </p>
 
             {/* Terminal */}
-            <InstallScriptTabs packageName="@ai-sdk-tools/store" />
+            <InstallScriptTabs packageName="@fondation-io/store" />
 
             {/* Used by */}
             <div className="space-y-6 max-w-xl">
@@ -172,14 +172,14 @@ function Chat() {
 
             <div className="space-y-4">
               <div className="text-xs text-secondary">
-                ◇ After (@ai-sdk-tools/store)
+                ◇ After (@fondation-io/store)
               </div>
               <div className="border border-[#3c3c3c] p-6 h-[32rem] overflow-y-auto">
                 <pre
                   className="text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html: highlight(`// App.tsx - Wrap with Provider
-import { Provider } from '@ai-sdk-tools/store'
+import { Provider } from '@fondation-io/store'
 
 function App() {
   return (
@@ -190,7 +190,7 @@ function App() {
 }
 
 // Chat.tsx - High-performance chat (3-5x faster!)
-import { useChat } from '@ai-sdk-tools/store'
+import { useChat } from '@fondation-io/store'
 import { DefaultChatTransport } from 'ai'
 
 function Chat() {
@@ -240,10 +240,10 @@ function MessageList() {
             <div className="text-sm flex items-center justify-between">
               <div>
                 <span className="text-secondary">git: (main)$ </span>
-                <span className="text-white">npm i @ai-sdk-tools/store</span>
+                <span className="text-white">npm i @fondation-io/store</span>
               </div>
               <CopyButton
-                text="npm i @ai-sdk-tools/store"
+                text="npm i @fondation-io/store"
                 className="ml-4 hover:text-white"
                 size={16}
               />

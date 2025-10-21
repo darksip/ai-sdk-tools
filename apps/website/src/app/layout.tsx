@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Provider } from "@ai-sdk-tools/store";
+import { Provider } from "@fondation-io/store";
 import { OpenPanelComponent } from "@openpanel/nextjs";
 import localFont from "next/font/local";
 import { Geist_Mono } from "next/font/google";

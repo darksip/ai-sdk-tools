@@ -68,7 +68,7 @@ export const memoryCached = <T extends Tool>(
 // ===== Usage throughout the app =====
 
 // In your tools files:
-// import { cached } from '@ai-sdk-tools/cache';
+// import { cached } from '@fondation-io/cache';
 // import { getContext } from '@/ai/context';
 // 
 // // Global tools (no context needed)

@@ -1,6 +1,6 @@
 {
-  "name": "@ai-sdk-tools/devtools",
-  "version": "0.8.2",
+  "name": "@fondation-io/devtools",
+  "version": "1.0.0",
   "description": "AI development tools for debugging and monitoring AI SDKs streams",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -40,14 +40,15 @@
     "@ai-sdk/react": ">=0.0.1",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
-    "@ai-sdk-tools/store": "*"
+    "@fondation-io/store": "*"
   },
   "peerDependenciesMeta": {
-    "@ai-sdk-tools/store": {
+    "@fondation-io/store": {
       "optional": true
     }
   },
   "devDependencies": {
+    "@types/node": "^24.7.2",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "react": "^19.2.0",
@@ -55,7 +56,7 @@
     "tsup": "^8.5.0",
     "typescript": "^5.9.3",
     "@ai-sdk/react": "^2.0.71",
-    "@ai-sdk-tools/store": "workspace:*"
+    "@fondation-io/store": "workspace:*"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -70,12 +71,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/midday-ai/ai-sdk-tools.git"
+    "url": "https://github.com/darksip/ai-sdk-tools.git"
   },
   "bugs": {
-    "url": "https://github.com/midday-ai/ai-sdk-tools/issues"
+    "url": "https://github.com/darksip/ai-sdk-tools/issues"
   },
-  "homepage": "https://github.com/midday-ai/ai-sdk-tools#readme",
+  "homepage": "https://github.com/darksip/ai-sdk-tools#readme",
   "publishConfig": {
     "access": "public"
   }

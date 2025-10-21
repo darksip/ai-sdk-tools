@@ -35,7 +35,7 @@ export default function InstallationContent() {
                 Build intelligent workflows with specialized agents and
                 automatic handoffs.
               </p>
-              <InstallScriptTabs packageName="@ai-sdk-tools/agents @ai-sdk-tools/memory ai zod" />
+              <InstallScriptTabs packageName="@fondation-io/agents @fondation-io/memory ai zod" />
             </div>
 
             <div>
@@ -44,7 +44,7 @@ export default function InstallationContent() {
                 Global state management for AI applications with optimized
                 performance.
               </p>
-              <InstallScriptTabs packageName="@ai-sdk-tools/store" />
+              <InstallScriptTabs packageName="@fondation-io/store" />
             </div>
 
             <div>
@@ -52,7 +52,7 @@ export default function InstallationContent() {
               <p className="text-sm text-secondary mb-4">
                 Powerful debugging and monitoring tool for AI applications.
               </p>
-              <InstallScriptTabs packageName="@ai-sdk-tools/devtools" />
+              <InstallScriptTabs packageName="@fondation-io/devtools" />
             </div>
 
             <div>
@@ -61,7 +61,7 @@ export default function InstallationContent() {
                 Advanced streaming interfaces with structured data and progress
                 tracking.
               </p>
-              <InstallScriptTabs packageName="@ai-sdk-tools/artifacts" />
+              <InstallScriptTabs packageName="@fondation-io/artifacts" />
             </div>
 
             <div>
@@ -69,7 +69,7 @@ export default function InstallationContent() {
               <p className="text-sm text-secondary mb-4">
                 Cache expensive AI tool executions with zero configuration.
               </p>
-              <InstallScriptTabs packageName="@ai-sdk-tools/cache" />
+              <InstallScriptTabs packageName="@fondation-io/cache" />
             </div>
           </div>
         </section>
@@ -85,9 +85,9 @@ export default function InstallationContent() {
             </p>
 
             <InstallScriptTabs
-              packageName="@ai-sdk-tools/agents @ai-sdk-tools/memory @ai-sdk-tools/store
-                @ai-sdk-tools/devtools @ai-sdk-tools/artifacts
-                @ai-sdk-tools/cache ai zod"
+              packageName="@fondation-io/agents @fondation-io/memory @fondation-io/store
+                @fondation-io/devtools @fondation-io/artifacts
+                @fondation-io/cache ai zod"
             />
           </div>
         </section>
@@ -104,7 +104,7 @@ export default function InstallationContent() {
               Use your preferred package manager to install any package from AI
               SDK Tools, for example:
             </p>
-            <InstallScriptTabs packageName="@ai-sdk-tools/store" />
+            <InstallScriptTabs packageName="@fondation-io/store" />
           </div>
         </section>
 

@@ -20,7 +20,7 @@ export default function StoreContent() {
               O(1) message lookups, and built-in optimizations.
             </p>
 
-            <InstallScriptTabs packageName="@ai-sdk-tools/store" />
+            <InstallScriptTabs packageName="@fondation-io/store" />
           </div>
         </section>
 
@@ -41,7 +41,7 @@ export default function StoreContent() {
 
             <div className="border border-[#3c3c3c] p-6">
               <h3 className="text-lg font-medium mb-4">
-                ✅ @ai-sdk-tools/store
+                ✅ @fondation-io/store
               </h3>
               <ul className="space-y-2 text-sm text-secondary">
                 <li>• Global state access from any component</li>
@@ -71,7 +71,7 @@ export default function StoreContent() {
 import { useChat } from '@ai-sdk/react'
 
 // After - ONLY CHANGE NEEDED
-import { useChat } from '@ai-sdk-tools/store'`),
+import { useChat } from '@fondation-io/store'`),
                 }}
               />
             </div>
@@ -170,7 +170,7 @@ const { messages, input, handleSubmit } = useChat({
               <h3 className="text-lg font-medium mb-4">
                 1. Install the package
               </h3>
-              <InstallScriptTabs packageName="@ai-sdk-tools/store" />
+              <InstallScriptTabs packageName="@fondation-io/store" />
             </div>
 
             <div>
@@ -180,7 +180,7 @@ const { messages, input, handleSubmit } = useChat({
                   className="text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html: highlight(`// store.ts
-import { createAIStore } from '@ai-sdk-tools/store'
+import { createAIStore } from '@fondation-io/store'
 
 export const store = createAIStore({
   initialMessages: [],
@@ -200,7 +200,7 @@ export const store = createAIStore({
                   className="text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html: highlight(`// ChatInput.tsx
-import { useChat } from '@ai-sdk-tools/store'
+import { useChat } from '@fondation-io/store'
 
 export function ChatInput() {
   const { input, handleInputChange, handleSubmit } = useChat()

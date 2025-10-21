@@ -22,7 +22,7 @@ export function CacheContent() {
             </p>
 
             {/* Terminal */}
-            <InstallScriptTabs packageName="@ai-sdk-tools/cache" />
+            <InstallScriptTabs packageName="@fondation-io/cache" />
 
             {/* Used by */}
             <div className="space-y-6 max-w-xl">
@@ -65,7 +65,7 @@ export function CacheContent() {
                 className="text-xs font-mono leading-relaxed overflow-x-auto"
                 dangerouslySetInnerHTML={{
                   __html:
-                    highlight(`import { createCached } from '@ai-sdk-tools/cache'
+                    highlight(`import { createCached } from '@fondation-io/cache'
 import { Redis } from '@upstash/redis'
 
 const expensiveWeatherTool = tool({
@@ -172,7 +172,7 @@ const weatherTool = cached(expensiveWeatherTool)
                   className="text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html:
-                      highlight(`import { createCached } from '@ai-sdk-tools/cache'
+                      highlight(`import { createCached } from '@fondation-io/cache'
 
 // Any AI SDK tool
 const weatherTool = tool({
@@ -212,7 +212,7 @@ const result = streamText({
                   className="text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html:
-                      highlight(`import { createCached } from '@ai-sdk-tools/cache'
+                      highlight(`import { createCached } from '@fondation-io/cache'
 import { Redis } from '@upstash/redis'
 
 // Just pass your Redis client - that's it!
@@ -248,7 +248,7 @@ const analysisTools = cached(burnRateAnalysis)`),
                   className="text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html:
-                      highlight(`import { createCached } from '@ai-sdk-tools/cache'
+                      highlight(`import { createCached } from '@fondation-io/cache'
 import { Redis } from '@upstash/redis'
 
 const burnRateAnalysis = tool({
@@ -299,7 +299,7 @@ const cachedAnalysis = cached(burnRateAnalysis)
                   dangerouslySetInnerHTML={{
                     __html:
                       highlight(`// src/lib/cache.ts - Smart environment setup
-import { createCached } from '@ai-sdk-tools/cache'
+import { createCached } from '@fondation-io/cache'
 import { Redis } from '@upstash/redis'
 
 // Clean environment-based selection

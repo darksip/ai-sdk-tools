@@ -1,3 +1,5 @@
+# @fondation-io/debug
+
 ## 1.0.0
 
 ### Major Changes
@@ -16,9 +18,3 @@
   - Development and debugging tools
   - Persistent memory system for AI agents
   - Zustand-based state management for AI applications
-
-### Patch Changes
-
-- Updated dependencies
-  - @fondation-io/debug@1.0.0
-  - @fondation-io/memory@1.0.0

@@ -1,4 +1,4 @@
-import type { MemoryConfig } from "@ai-sdk-tools/memory";
+import type { MemoryConfig } from "@fondation-io/memory";
 import { tool } from "ai";
 import { z } from "zod";
 import { getContext } from "../context.js";

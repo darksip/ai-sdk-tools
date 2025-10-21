@@ -1,6 +1,6 @@
 {
-  "name": "@ai-sdk-tools/agents",
-  "version": "0.3.0",
+  "name": "@fondation-io/agents",
+  "version": "1.0.0",
   "description": "Multi-agent orchestration system built on AI SDK v5 - handoffs, routing, and coordination for any AI provider",
   "keywords": [
     "ai",
@@ -19,13 +19,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/midday-ai/ai-sdk-tools.git",
+    "url": "https://github.com/darksip/ai-sdk-tools.git",
     "directory": "packages/agents"
   },
   "bugs": {
-    "url": "https://github.com/midday-ai/ai-sdk-tools/issues"
+    "url": "https://github.com/darksip/ai-sdk-tools/issues"
   },
-  "homepage": "https://github.com/midday-ai/ai-sdk-tools/tree/main/packages/agents#readme",
+  "homepage": "https://github.com/darksip/ai-sdk-tools/tree/main/packages/agents#readme",
   "type": "module",
   "exports": {
     ".": {
@@ -48,19 +48,16 @@
     "clean": "rm -rf dist",
     "type-check": "tsc --noEmit"
   },
-  "dependencies": {
-    "@ai-sdk-tools/debug": "workspace:*",
-    "@ai-sdk-tools/memory": "workspace:*"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "ai": ">=5.0.0",
     "zod": "^3.25.76 || ^4.1.8"
   },
   "peerDependenciesMeta": {
-    "@ai-sdk-tools/artifacts": {
+    "@fondation-io/artifacts": {
       "optional": true
     },
-    "@ai-sdk-tools/cache": {
+    "@fondation-io/cache": {
       "optional": true
     }
   },
@@ -69,7 +66,9 @@
     "tsup": "^8.5.0",
     "typescript": "^5.9.3",
     "zod": "^4.1.12",
-    "ai": "^5.0.71"
+    "ai": "^5.0.71",
+    "@fondation-io/debug": "workspace:*",
+    "@fondation-io/memory": "workspace:*"
   },
   "publishConfig": {
     "access": "public"

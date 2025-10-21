@@ -6,7 +6,7 @@
 
 import type { ModelMessage } from "ai";
 import type { HandoffInputData } from "./types.js";
-import { createLogger } from "@ai-sdk-tools/debug";
+import { createLogger } from "@fondation-io/debug";
 
 const logger = createLogger('TOOL_EXTRACTOR');
 

@@ -25,9 +25,9 @@
  */
 
 // Re-export everything from all packages
-export * from "@ai-sdk-tools/agents";
-export * from "@ai-sdk-tools/artifacts";
-export * from "@ai-sdk-tools/cache";
-export * from "@ai-sdk-tools/devtools";
-export * from "@ai-sdk-tools/memory";
-export * from "@ai-sdk-tools/store";
+export * from "@fondation-io/agents";
+export * from "@fondation-io/artifacts";
+export * from "@fondation-io/cache";
+export * from "@fondation-io/devtools";
+export * from "@fondation-io/memory";
+export * from "@fondation-io/store";

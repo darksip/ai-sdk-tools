@@ -13,7 +13,7 @@ type StoreApi = any;
 
 // Import the store context directly - this will be resolved by the bundler
 // The bundler will handle the optional dependency resolution
-import { ChatStoreContext as ImportedChatStoreContext } from "@ai-sdk-tools/store";
+import { ChatStoreContext as ImportedChatStoreContext } from "@fondation-io/store";
 
 // Use the imported context
 const ChatStoreContext = ImportedChatStoreContext;

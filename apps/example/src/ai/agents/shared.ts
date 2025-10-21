@@ -7,9 +7,9 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Redis } from "@upstash/redis";
-import type { AgentConfig } from "@ai-sdk-tools/agents";
-import { Agent } from "@ai-sdk-tools/agents";
-import { UpstashProvider, type MemoryConfig } from "ai-sdk-tools";
+import type { AgentConfig } from "@fondation-io/agents";
+import { Agent } from "@fondation-io/agents";
+import { UpstashProvider, type MemoryConfig } from "@fondation-io/ai-sdk-tools";
 import { openai } from "@ai-sdk/openai";
 
 // Load memory template from markdown file

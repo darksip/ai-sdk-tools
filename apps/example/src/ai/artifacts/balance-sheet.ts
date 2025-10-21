@@ -1,4 +1,4 @@
-import { artifact } from "ai-sdk-tools";
+import { artifact } from "@fondation-io/ai-sdk-tools";
 import { z } from "zod";
 
 // Define the balance sheet artifact schema

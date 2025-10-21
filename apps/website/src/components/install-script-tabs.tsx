@@ -12,7 +12,7 @@ type PackageManager = "npm" | "yarn" | "pnpm" | "bun";
 const STORAGE_KEY = "ai-sdk-tools-preferred-package-manager";
 
 export function InstallScriptTabs({
-  packageName = "ai-sdk-tools",
+  packageName = "@fondation-io/ai-sdk-tools",
 }: InstallScriptTabsProps) {
   const [activeTab, setActiveTab] = useState<PackageManager>("npm");
 

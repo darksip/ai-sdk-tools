@@ -19,7 +19,7 @@ export default function DevtoolsContent() {
               Real-time insights into tool calls, performance metrics, and
               streaming events with advanced filtering and search.
             </p>
-            <InstallScriptTabs packageName="@ai-sdk-tools/devtools" />
+            <InstallScriptTabs packageName="@fondation-io/devtools" />
           </div>
         </section>
 
@@ -87,7 +87,7 @@ export default function DevtoolsContent() {
               <h3 className="text-lg font-medium mb-4">
                 1. Install the package
               </h3>
-              <InstallScriptTabs packageName="@ai-sdk-tools/devtools" />
+              <InstallScriptTabs packageName="@fondation-io/devtools" />
             </div>
 
             <div>
@@ -97,7 +97,7 @@ export default function DevtoolsContent() {
                   className="text-xs font-mono leading-relaxed"
                   dangerouslySetInnerHTML={{
                     __html:
-                      highlight(`import { AIDevTools } from '@ai-sdk-tools/devtools'
+                      highlight(`import { AIDevTools } from '@fondation-io/devtools'
 
 function App() {
   return (

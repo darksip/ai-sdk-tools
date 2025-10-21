@@ -1,7 +1,7 @@
 {
-  "name": "@ai-sdk-tools/artifacts",
+  "name": "@fondation-io/artifacts",
   "private": false,
-  "version": "0.8.2",
+  "version": "1.0.0",
   "description": "Advanced streaming interfaces for AI applications",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -42,12 +42,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/midday-ai/ai-sdk-tools.git"
+    "url": "https://github.com/darksip/ai-sdk-tools.git"
   },
   "bugs": {
-    "url": "https://github.com/midday-ai/ai-sdk-tools/issues"
+    "url": "https://github.com/darksip/ai-sdk-tools/issues"
   },
-  "homepage": "https://github.com/midday-ai/ai-sdk-tools#readme",
+  "homepage": "https://github.com/darksip/ai-sdk-tools#readme",
   "publishConfig": {
     "access": "public"
   },
@@ -59,7 +59,7 @@
     "@types/react": "^19.2.2",
     "typescript": "^5.9.3",
     "tsup": "^8.5.0",
-    "@ai-sdk-tools/store": "workspace:*"
+    "@fondation-io/store": "workspace:*"
   },
   "peerDependencies": {
     "ai": "^5.0.0",

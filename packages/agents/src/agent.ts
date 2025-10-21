@@ -4,7 +4,7 @@ import {
   getWorkingMemoryInstructions,
   type ConversationMessage,
   type MemoryConfig,
-} from "@ai-sdk-tools/memory";
+} from "@fondation-io/memory";
 import {
   Experimental_Agent as AISDKAgent,
   convertToModelMessages,
@@ -23,7 +23,7 @@ import {
   type UIMessageStreamWriter,
 } from "ai";
 import { z } from "zod";
-import { createLogger } from "@ai-sdk-tools/debug";
+import { createLogger } from "@fondation-io/debug";
 import { createHandoffTool, isHandoffResult, HANDOFF_TOOL_NAME } from "./handoff.js";
 import { promptWithHandoffInstructions } from "./handoff-prompt.js";
 import { writeAgentStatus, writeSuggestions } from "./streaming.js";

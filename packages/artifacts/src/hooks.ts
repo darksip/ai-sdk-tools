@@ -1,5 +1,5 @@
 import type { UIMessage } from "@ai-sdk/react";
-import { useChatMessages } from "@ai-sdk-tools/store";
+import { useChatMessages } from "@fondation-io/store";
 import { useEffect, useState, useMemo } from "react";
 import type { z } from "zod";
 import type {

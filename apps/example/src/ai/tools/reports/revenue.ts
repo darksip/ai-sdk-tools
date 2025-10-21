@@ -4,7 +4,7 @@ import { RevenueArtifact } from "@/ai/artifacts/revenue";
 import { currencyFilterSchema, dateRangeSchema } from "@/ai/types/filters";
 import { generateRevenueMetrics } from "@/ai/utils/fake-data";
 import { delay } from "@/lib/delay";
-import { getWriter } from "@ai-sdk-tools/artifacts";
+import { getWriter } from "@fondation-io/artifacts";
 
 /**
  * Revenue Dashboard Tool
