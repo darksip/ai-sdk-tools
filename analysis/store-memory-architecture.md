@@ -1,25 +1,31 @@
-# Architecture Store & Memory - AI SDK Tools
+# Architecture Store & Memory - AI SDK Tools (@fondation-io)
+
+> **🔱 Fork Notice**
+>
+> Ce document fait partie du fork [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) du projet original [AI SDK Tools](https://github.com/midday-ai/ai-sdk-tools) par Midday.
 
 ## Vue d'ensemble
 
 Ce document détaille l'architecture des systèmes de gestion d'état (Store) et de mémoire persistante (Memory) du projet AI SDK Tools, conçus pour des applications d'IA conversationnelle en production.
 
+**Note**: Les références de packages utilisent le scope `@fondation-io` (fork) au lieu de `@ai-sdk-tools` (upstream).
+
 **Objectif**: Fournir les informations architecturales nécessaires pour implémenter un système similaire dans un autre projet.
 
 ## ⚠️ Indépendance des packages
 
-**Information critique**: Les packages **@ai-sdk-tools/store** et **@ai-sdk-tools/memory** sont **totalement indépendants** et utilisables sans le reste de l'écosystème ai-sdk-tools.
+**Information critique**: Les packages **@fondation-io/store** et **@fondation-io/memory** sont **totalement indépendants** et utilisables sans le reste de l'écosystème ai-sdk-tools.
 
 ### Dépendances externes uniquement
 
-**@ai-sdk-tools/store** :
+**@fondation-io/store** :
 - `ai` ^5.0.68
 - `@ai-sdk/react` ≥2.0.0
 - `react` ≥18.0.0
 - `zustand` ≥5.0.0
 - ✅ **Aucune dépendance interne au monorepo**
 
-**@ai-sdk-tools/memory** :
+**@fondation-io/memory** :
 - `zod` ^4.1.12
 - `@upstash/redis` ^1.34.3 (optionnel)
 - `drizzle-orm` ^0.36.0 (optionnel)
@@ -32,10 +38,10 @@ Ces packages sont conçus comme des **utilitaires réutilisables** et peuvent ê
 **Installation minimale** :
 ```bash
 # Store uniquement
-npm install @ai-sdk-tools/store zustand
+npm install @fondation-io/store zustand
 
 # Memory uniquement
-npm install @ai-sdk-tools/memory
+npm install @fondation-io/memory
 
 # + provider optionnel
 npm install @upstash/redis  # Redis serverless
@@ -49,7 +55,7 @@ npm install drizzle-orm     # SQL (PostgreSQL/MySQL/SQLite)
 
 **Information critique** : Les packages ont des exigences d'exécution différentes.
 
-### @ai-sdk-tools/store → 100% CLIENT
+### @fondation-io/store → 100% CLIENT
 
 **Environnement** : Browser uniquement
 
@@ -62,7 +68,7 @@ npm install drizzle-orm     # SQL (PostgreSQL/MySQL/SQLite)
 
 **Impossible de s'exécuter côté serveur** (Next.js Server Components, Node.js, etc.)
 
-### @ai-sdk-tools/memory → 100% SERVER
+### @fondation-io/memory → 100% SERVER
 
 **Environnement** : Node.js/serveur uniquement
 
@@ -75,7 +81,7 @@ npm install drizzle-orm     # SQL (PostgreSQL/MySQL/SQLite)
 
 **Impossible de s'exécuter côté client** (pas de Redis/SQL dans le browser)
 
-### @ai-sdk-tools/artifacts → MIXTE (Architecture intelligente)
+### @fondation-io/artifacts → MIXTE (Architecture intelligente)
 
 **2 points d'entrée séparés** :
 
@@ -84,17 +90,17 @@ npm install drizzle-orm     # SQL (PostgreSQL/MySQL/SQLite)
 entry: ["src/index.ts", "src/client.ts"]
 ```
 
-**Server-side** (`import from '@ai-sdk-tools/artifacts'`) :
+**Server-side** (`import from '@fondation-io/artifacts'`) :
 - `artifact()` function : Création d'artifacts dans les AI tools
 - Pas de `"use client"`
 - S'exécute dans les Route Handlers / Server Actions
 
-**Client-side** (`import from '@ai-sdk-tools/artifacts/client'`) :
+**Client-side** (`import from '@fondation-io/artifacts/client'`) :
 - `useArtifact()` hook : Consommation dans React components
 - Directive `"use client"` injectée uniquement sur `client.js`
 - S'exécute dans les composants React
 
-### @ai-sdk-tools/agents → 100% SERVER
+### @fondation-io/agents → 100% SERVER
 
 **Environnement** : Node.js/serveur uniquement
 
@@ -110,11 +116,11 @@ entry: ["src/index.ts", "src/client.ts"]
 ┌─────────────────────────────────────┐
 │   BROWSER (Client)                  │
 │                                     │
-│   @ai-sdk-tools/store               │  ← React hooks
+│   @fondation-io/store               │  ← React hooks
 │   - useChat()                       │  ← Zustand state
 │   - useChatMessages()               │  ← Browser APIs
 │                                     │
-│   @ai-sdk-tools/artifacts/client    │  ← React hooks
+│   @fondation-io/artifacts/client    │  ← React hooks
 │   - useArtifact()                   │
 │                                     │
 └─────────────┬───────────────────────┘
@@ -124,14 +130,14 @@ entry: ["src/index.ts", "src/client.ts"]
 ┌─────────────▼───────────────────────┐
 │   SERVER (Node.js)                  │
 │                                     │
-│   @ai-sdk-tools/memory              │  ← Redis/SQL
+│   @fondation-io/memory              │  ← Redis/SQL
 │   - DrizzleProvider                 │  ← Persistence
 │   - UpstashProvider                 │
 │                                     │
-│   @ai-sdk-tools/agents              │  ← AI SDK
+│   @fondation-io/agents              │  ← AI SDK
 │   - Agent.stream()                  │  ← LLM calls
 │                                     │
-│   @ai-sdk-tools/artifacts           │  ← AI tools
+│   @fondation-io/artifacts           │  ← AI tools
 │   - artifact()                      │
 │                                     │
 └─────────────────────────────────────┘
@@ -161,16 +167,16 @@ entry: ["src/index.ts", "src/client.ts"]
 **Vite + React + Express (SPA classique)** :
 ```bash
 # Frontend (Vite)
-npm install @ai-sdk-tools/store zustand
+npm install @fondation-io/store zustand
 
 # Backend (Express)
-npm install @ai-sdk-tools/memory @ai-sdk-tools/agents ai
+npm install @fondation-io/memory @fondation-io/agents ai
 ```
 
 **Next.js App Router (Full-stack)** :
 ```bash
 # Tout dans un seul projet
-npm install @ai-sdk-tools/store @ai-sdk-tools/memory zustand
+npm install @fondation-io/store @fondation-io/memory zustand
 
 # Store → "use client" components
 # Memory → Server Components / Route Handlers
@@ -178,7 +184,7 @@ npm install @ai-sdk-tools/store @ai-sdk-tools/memory zustand
 
 **Remix (Full-stack)** :
 ```bash
-npm install @ai-sdk-tools/store @ai-sdk-tools/memory zustand
+npm install @fondation-io/store @fondation-io/memory zustand
 
 # Store → Components React
 # Memory → Loaders / Actions
@@ -194,7 +200,7 @@ npm install @ai-sdk-tools/store @ai-sdk-tools/memory zustand
 
 ---
 
-## 1. Package Store (@ai-sdk-tools/store)
+## 1. Package Store (@fondation-io/store)
 
 ### 1.1 Informations générales
 
@@ -395,7 +401,7 @@ useEffect(() => {
 
 ---
 
-## 2. Package Memory (@ai-sdk-tools/memory)
+## 2. Package Memory (@fondation-io/memory)
 
 ### 2.1 Informations générales
 

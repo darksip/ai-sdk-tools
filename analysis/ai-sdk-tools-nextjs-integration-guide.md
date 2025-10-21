@@ -1,8 +1,14 @@
-# Guide d'intégration AI SDK Tools dans Next.js + AI SDK v5
+# Guide d'intégration AI SDK Tools (@fondation-io) dans Next.js + AI SDK v5
+
+> **🔱 Fork Notice**
+>
+> Ce document fait partie du fork [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) du projet original [AI SDK Tools](https://github.com/midday-ai/ai-sdk-tools) par Midday.
 
 ## 🎯 Vue d'ensemble
 
 Ce document analyse l'intérêt de chaque bibliothèque AI SDK Tools dans le contexte d'un projet **Next.js utilisant déjà AI SDK v5 avec des agents implémentés**.
+
+**Note**: Toutes les installations et imports dans ce guide utilisent le scope `@fondation-io` (fork) au lieu de `@ai-sdk-tools` (upstream).
 
 ### Contexte de départ assumé
 
@@ -16,7 +22,7 @@ Ce document analyse l'intérêt de chaque bibliothèque AI SDK Tools dans le con
 
 ## 📦 Analyse par package
 
-### 1. @ai-sdk-tools/store
+### 1. @fondation-io/store
 
 **Version**: 0.8.2
 **Type**: 100% CLIENT (React hooks)
@@ -26,7 +32,7 @@ Ce document analyse l'intérêt de chaque bibliothèque AI SDK Tools dans le con
 
 Le hook `useChat` vanilla d'AI SDK v5 (`@ai-sdk/react`) présente des limitations en production:
 
-| Problème vanilla AI SDK | Solution avec @ai-sdk-tools/store |
+| Problème vanilla AI SDK | Solution avec @fondation-io/store |
 |-------------------------|-----------------------------------|
 | Re-renders massifs sur chaque message stream | Batched updates + throttling (16ms) |
 | Pas d'indexation des messages | MessageIndex O(1) lookups |
@@ -52,7 +58,7 @@ export default function Chat() {
 
 // Après (avec store)
 'use client'
-import { useChat, Provider } from '@ai-sdk-tools/store'
+import { useChat, Provider } from '@fondation-io/store'
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
@@ -73,7 +79,7 @@ export default function Chat() {
 
 // Avec store: accès direct depuis n'importe quel composant
 'use client'
-import { useChatMessages, useMessageCount } from '@ai-sdk-tools/store'
+import { useChatMessages, useMessageCount } from '@fondation-io/store'
 
 function ChatMessages() {
   const messages = useChatMessages() // Auto-subscribed
@@ -106,7 +112,7 @@ function MessageStats() {
 ```tsx
 // Il suffit de changer l'import
 - import { useChat } from '@ai-sdk/react'
-+ import { useChat } from '@ai-sdk-tools/store'
++ import { useChat } from '@fondation-io/store'
 
 // API identique, fonctionnalités en plus
 const chat = useChat({
@@ -123,7 +129,7 @@ const chat = useChat({
 
 ---
 
-### 2. @ai-sdk-tools/memory
+### 2. @fondation-io/memory
 
 **Version**: 0.1.2
 **Type**: 100% SERVER (providers Redis/SQL)
@@ -134,7 +140,7 @@ const chat = useChat({
 
 AI SDK v5 vanilla **ne fournit pas** de système de mémoire persistante. Vos agents oublient tout entre les requêtes.
 
-| Sans memory | Avec @ai-sdk-tools/memory |
+| Sans memory | Avec @fondation-io/memory |
 |-------------|---------------------------|
 | Agents stateless | Working memory + chat history |
 | Contexte perdu entre sessions | Persistence Redis/PostgreSQL/MySQL/SQLite |
@@ -147,7 +153,7 @@ AI SDK v5 vanilla **ne fournit pas** de système de mémoire persistante. Vos ag
 
 ```typescript
 // app/api/chat/route.ts
-import { InMemoryProvider } from '@ai-sdk-tools/memory'
+import { InMemoryProvider } from '@fondation-io/memory'
 import { streamText } from 'ai'
 import { openai } from '@ai-sdk/openai'
 
@@ -213,7 +219,7 @@ await memory.saveWorkingMemory({
 
 ```typescript
 // lib/memory.ts
-import { UpstashMemoryProvider } from '@ai-sdk-tools/memory'
+import { UpstashMemoryProvider } from '@fondation-io/memory'
 import { Redis } from '@upstash/redis'
 
 export const memory = new UpstashMemoryProvider({
@@ -295,7 +301,7 @@ export async function POST(req: Request) {
 
 ---
 
-### 3. @ai-sdk-tools/cache
+### 3. @fondation-io/cache
 
 **Version**: 0.7.2
 **Type**: 100% SERVER (wrapper de tools)
@@ -306,7 +312,7 @@ export async function POST(req: Request) {
 
 AI SDK v5 **n'a pas de cache natif** pour les tools. Chaque appel coûte temps + argent, même si les paramètres sont identiques.
 
-| Sans cache | Avec @ai-sdk-tools/cache |
+| Sans cache | Avec @fondation-io/cache |
 |------------|-------------------------|
 | Appel API à chaque fois | Cache intelligent avec TTL |
 | Coûts 10x+ pour requêtes répétées | Réduction ~80% des coûts |
@@ -333,7 +339,7 @@ const weatherTool = tool({
 })
 
 // Après: cache Redis
-import { createCached } from '@ai-sdk-tools/cache'
+import { createCached } from '@fondation-io/cache'
 import { Redis } from '@upstash/redis'
 
 const cached = createCached({
@@ -371,7 +377,7 @@ const burnRateTool = tool({
 })
 
 // Solution: context-aware caching
-import { cached } from '@ai-sdk-tools/cache'
+import { cached } from '@fondation-io/cache'
 
 const cachedBurnRate = cached(burnRateTool, {
   cacheKey: () => {
@@ -409,7 +415,7 @@ const cachedAnalysis = cached(analysisTool)
 **Scénario 4: Cache multiple tools**
 
 ```typescript
-import { cacheTools } from '@ai-sdk-tools/cache'
+import { cacheTools } from '@fondation-io/cache'
 
 const { weather, translation, exchange } = cacheTools({
   weather: weatherTool,
@@ -462,16 +468,16 @@ cachedTool.clearCache('specific-key') // Clé précise
 
 1. **Sérialisation clés**: Déterministe (ordre clés trié) comme React Query
 2. **TTL par défaut**: 10min LRU, 30min Redis (configurable)
-3. **Artifacts**: Nécessite `@ai-sdk-tools/artifacts` en peer dep optionnelle
+3. **Artifacts**: Nécessite `@fondation-io/artifacts` en peer dep optionnelle
 4. **Streaming**: Seul le dernier chunk stocké (texte complet), pas tous les deltas
 
 ---
 
-### 4. @ai-sdk-tools/artifacts
+### 4. @fondation-io/artifacts
 
 **Version**: 0.8.2
 **Type**: MIXTE (server pour `artifact()`, client pour `useArtifact`)
-**Dépendances**: `@ai-sdk-tools/store` (client), `zod`, `ai ^5.0`
+**Dépendances**: `@fondation-io/store` (client), `zod`, `ai ^5.0`
 
 #### ❓ Quel problème résout-il ?
 
@@ -481,7 +487,7 @@ AI SDK v5 supporte les **data parts** mais sans:
 - Progress tracking
 - Hook React optimisé pour consommation
 
-| Vanilla AI SDK data parts | @ai-sdk-tools/artifacts |
+| Vanilla AI SDK data parts | @fondation-io/artifacts |
 |---------------------------|------------------------|
 | Pas de validation schéma | Zod schema strict |
 | Statut manual tracking | Status automatique |
@@ -496,7 +502,7 @@ AI SDK v5 supporte les **data parts** mais sans:
 ```typescript
 // 1. Définir artifact (partagé client/serveur)
 // lib/artifacts.ts
-import { artifact } from '@ai-sdk-tools/artifacts'
+import { artifact } from '@fondation-io/artifacts'
 import { z } from 'zod'
 
 export const burnRateArtifact = artifact('burn-rate', z.object({
@@ -556,7 +562,7 @@ const analyzeBurnRate = tool({
 // 3. Composant React
 // components/BurnRateChart.tsx
 'use client'
-import { useArtifact } from '@ai-sdk-tools/artifacts/client'
+import { useArtifact } from '@fondation-io/artifacts/client'
 import { burnRateArtifact } from '@/lib/artifacts'
 
 export function BurnRateChart() {
@@ -605,7 +611,7 @@ const reportArtifact = artifact('report', reportSchema)
 
 // Composant qui switch sur le type
 'use client'
-import { useArtifacts } from '@ai-sdk-tools/artifacts/client'
+import { useArtifacts } from '@fondation-io/artifacts/client'
 
 function Canvas() {
   const { current, latest } = useArtifacts({
@@ -659,7 +665,7 @@ const tool = tool({
 })
 
 // Après: artifact typé
-import { artifact } from '@ai-sdk-tools/artifacts'
+import { artifact } from '@fondation-io/artifacts'
 
 const chartArtifact = artifact('chart', z.object({
   title: z.string(),
@@ -692,24 +698,24 @@ const tool = tool({
 
 #### ⚠️ Points d'attention
 
-1. **Store requis**: Artifacts dépend de `@ai-sdk-tools/store` pour message management
+1. **Store requis**: Artifacts dépend de `@fondation-io/store` pour message management
 2. **Provider React**: Wrapper app avec `<Provider>` du store
 3. **Schemas partagés**: Importer artifact dans client ET serveur (monorepo friendly)
 4. **Progress manual**: `artifact.progress = 0.5` doit être set explicitement
 
 ---
 
-### 5. @ai-sdk-tools/devtools
+### 5. @fondation-io/devtools
 
 **Version**: 0.8.2
 **Type**: 100% CLIENT (React component)
-**Dépendances**: `react ^18`, `@mui/material ^7`, `@xyflow/react ^12`, `@ai-sdk-tools/store` (optionnel)
+**Dépendances**: `react ^18`, `@mui/material ^7`, `@xyflow/react ^12`, `@fondation-io/store` (optionnel)
 
 #### ❓ Quel problème résout-il ?
 
 AI SDK v5 **n'a pas de UI de debugging intégrée**. Debugger les streams, tools, agents nécessite `console.log` manuels.
 
-| Sans devtools | Avec @ai-sdk-tools/devtools |
+| Sans devtools | Avec @fondation-io/devtools |
 |---------------|----------------------------|
 | console.log partout | UI dédiée avec filtres |
 | Pas de vue d'ensemble events | Timeline complète des events |
@@ -724,7 +730,7 @@ AI SDK v5 **n'a pas de UI de debugging intégrée**. Debugger les streams, tools
 ```tsx
 // app/layout.tsx ou app/chat/page.tsx
 'use client'
-import { AIDevtools } from '@ai-sdk-tools/devtools'
+import { AIDevtools } from '@fondation-io/devtools'
 
 export default function ChatPage() {
   return (
@@ -811,7 +817,7 @@ const agent = new Agent({
 **Adoptez devtools si:**
 - ✅ Développement actif avec debugging fréquent
 - ✅ Multi-agents / tools complexes
-- ✅ Vous utilisez déjà `@ai-sdk-tools/store` (intégration bonus)
+- ✅ Vous utilisez déjà `@fondation-io/store` (intégration bonus)
 - ✅ Équipe qui debug ensemble (UI > logs)
 
 **Restez console.log si:**
@@ -823,7 +829,7 @@ const agent = new Agent({
 #### 🔧 Intégration manuelle
 
 ```tsx
-import { useAIDevtools } from '@ai-sdk-tools/devtools'
+import { useAIDevtools } from '@fondation-io/devtools'
 
 function CustomDebugPanel() {
   const {
@@ -864,11 +870,11 @@ function CustomDebugPanel() {
 
 ---
 
-### 6. @ai-sdk-tools/agents
+### 6. @fondation-io/agents
 
 **Version**: 0.2.2
 **Type**: 100% SERVER (orchestration)
-**Dépendances**: `@ai-sdk-tools/memory` (workspace), `ai ^5.0`, `zod ^3.25|^4.1`
+**Dépendances**: `@fondation-io/memory` (workspace), `ai ^5.0`, `zod ^3.25|^4.1`
 
 #### ❓ Quel problème résout-il ?
 
@@ -879,7 +885,7 @@ AI SDK v5 vanilla n'a **pas de système multi-agents natif**. Vous devez implém
 - Tool permissions
 - Guardrails
 
-| Vanilla AI SDK agents | @ai-sdk-tools/agents |
+| Vanilla AI SDK agents | @fondation-io/agents |
 |-----------------------|---------------------|
 | Pas d'abstraction agent | Classe `Agent` avec config |
 | Routing manuel | `matchOn` patterns + LLM routing |
@@ -891,7 +897,7 @@ AI SDK v5 vanilla n'a **pas de système multi-agents natif**. Vous devez implém
 
 #### 🎯 Cas d'usage dans votre projet Next.js
 
-**⚠️ Question clé**: Vous avez déjà des agents AI SDK v5. **Devez-vous migrer vers @ai-sdk-tools/agents ?**
+**⚠️ Question clé**: Vous avez déjà des agents AI SDK v5. **Devez-vous migrer vers @fondation-io/agents ?**
 
 **Scénario 1: Vous avez déjà des agents simples (1-2 agents max)**
 
@@ -919,7 +925,7 @@ export async function POST(req: Request) {
 }
 ```
 
-**✅ Restez vanilla AI SDK** - Votre code est simple et fonctionne. Pas besoin de la complexité d'@ai-sdk-tools/agents.
+**✅ Restez vanilla AI SDK** - Votre code est simple et fonctionne. Pas besoin de la complexité d'@fondation-io/agents.
 
 **Scénario 2: Vous avez des workflows multi-étapes avec handoffs**
 
@@ -972,10 +978,10 @@ export async function POST(req: Request) {
 
 **❌ Code verbeux, fragile, pas de type safety**
 
-**✅ Avec @ai-sdk-tools/agents:**
+**✅ Avec @fondation-io/agents:**
 
 ```typescript
-import { Agent } from '@ai-sdk-tools/agents'
+import { Agent } from '@fondation-io/agents'
 import { openai } from '@ai-sdk/openai'
 
 // Définir agents spécialisés
@@ -1115,7 +1121,7 @@ const restrictedAgent = new Agent({
 
 #### ⚖️ Intérêt vs vanilla multi-agents
 
-**Adoptez @ai-sdk-tools/agents si:**
+**Adoptez @fondation-io/agents si:**
 - ✅ Workflows multi-agents complexes (3+ agents)
 - ✅ Handoffs fréquents entre agents
 - ✅ Besoin de context typé cross-agents
@@ -1152,7 +1158,7 @@ existingAgent.instructions = (context) => buildPrompt(context)
 
 #### ⚠️ Points d'attention
 
-1. **Memory dépendance**: Agents dépend de `@ai-sdk-tools/memory` (workspace:*)
+1. **Memory dépendance**: Agents dépend de `@fondation-io/memory` (workspace:*)
 2. **Overhead**: Orchestration ajoute latence vs direct `streamText`
 3. **Max turns**: Défaut 10, configurer selon vos besoins
 4. **Streaming UI**: `toUIMessageStream` pour Next.js, `stream()` pour autre usage
@@ -1183,7 +1189,7 @@ Next.js App
 
 ```typescript
 // lib/memory.ts (server)
-import { UpstashMemoryProvider } from '@ai-sdk-tools/memory'
+import { UpstashMemoryProvider } from '@fondation-io/memory'
 import { Redis } from '@upstash/redis'
 
 export const memory = new UpstashMemoryProvider({
@@ -1192,7 +1198,7 @@ export const memory = new UpstashMemoryProvider({
 
 // lib/tools.ts (server)
 import { tool } from 'ai'
-import { createCached } from '@ai-sdk-tools/cache'
+import { createCached } from '@fondation-io/cache'
 import { Redis } from '@upstash/redis'
 
 const cached = createCached({ cache: Redis.fromEnv() })
@@ -1207,7 +1213,7 @@ export const weatherTool = cached(tool({
 }))
 
 // lib/artifacts.ts (shared)
-import { artifact } from '@ai-sdk-tools/artifacts'
+import { artifact } from '@fondation-io/artifacts'
 
 export const reportArtifact = artifact('report', z.object({
   title: z.string(),
@@ -1216,7 +1222,7 @@ export const reportArtifact = artifact('report', z.object({
 }))
 
 // lib/agents.ts (server)
-import { Agent } from '@ai-sdk-tools/agents'
+import { Agent } from '@fondation-io/agents'
 import { openai } from '@ai-sdk/openai'
 import { weatherTool } from './tools'
 import { memory } from './memory'
@@ -1255,9 +1261,9 @@ export async function POST(req: Request) {
 
 // app/chat/page.tsx (client)
 'use client'
-import { useChat } from '@ai-sdk-tools/store'
-import { useArtifact } from '@ai-sdk-tools/artifacts/client'
-import { AIDevtools } from '@ai-sdk-tools/devtools'
+import { useChat } from '@fondation-io/store'
+import { useArtifact } from '@fondation-io/artifacts/client'
+import { AIDevtools } from '@fondation-io/devtools'
 import { reportArtifact } from '@/lib/artifacts'
 
 export default function ChatPage() {
@@ -1376,18 +1382,18 @@ Tous les packages sont **MIT** et peuvent être remplacés/forkés. Cependant:
 - Refactor complet d'app existante
 - Équipe dédiée AI/LLM avec best practices
 
-### Alternative: Package unifié `ai-sdk-tools`
+### Alternative: Package unifié `@fondation-io/ai-sdk-tools`
 
 ```bash
-npm install ai-sdk-tools
+npm install @fondation-io/ai-sdk-tools
 ```
 
 ```typescript
 // Server-side
-import { Agent, artifact, cached } from 'ai-sdk-tools'
+import { Agent, artifact, cached } from '@fondation-io/ai-sdk-tools'
 
 // Client-side
-import { useChat, useArtifact, AIDevtools } from 'ai-sdk-tools/client'
+import { useChat, useArtifact, AIDevtools } from '@fondation-io/ai-sdk-tools/client'
 ```
 
 **Avantage**: Un seul package, versions synchro
@@ -1399,9 +1405,16 @@ import { useChat, useArtifact, AIDevtools } from 'ai-sdk-tools/client'
 
 - **Documentation**: README de chaque package (`packages/*/README.md`)
 - **Exemples**: `/apps/example/src/ai/` (Next.js 15 real-world examples)
-- **GitHub**: https://github.com/midday-ai/ai-sdk-tools
-- **Issues**: https://github.com/midday-ai/ai-sdk-tools/issues
+- **Fork GitHub**: https://github.com/darksip/ai-sdk-tools
+- **Upstream GitHub**: https://github.com/midday-ai/ai-sdk-tools
+- **Issues**: https://github.com/darksip/ai-sdk-tools/issues
 
 ---
 
-**Dernière mise à jour**: Document basé sur versions décembre 2024
+## 🙏 Remerciements
+
+Ce guide et les packages qu'il documente sont basés sur le projet [AI SDK Tools](https://github.com/midday-ai/ai-sdk-tools) créé par l'équipe [Midday](https://midday.ai). Tous les crédits pour le design original et l'implémentation reviennent aux auteurs originaux.
+
+---
+
+**Dernière mise à jour**: Document basé sur versions décembre 2024 (fork @fondation-io v1.0.0)
