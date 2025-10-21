@@ -639,10 +639,11 @@ if (usage) {
 ### Features
 
 - **Type Definitions** - `OpenRouterUsage`, `OpenRouterMetadata`, `OpenRouterProviderOptions`
-- **Usage Extraction** - `extractOpenRouterUsage()`, `extractOpenRouterUsageWithDefaults()`
-- **Formatting** - `formatCost()`, `formatTokens()`, `summarizeUsage()`
-- **Budget Tracking** - `UsageAccumulator` for multi-request cost monitoring
-- **TypeScript Support** - Full autocomplete for providerOptions
+- **Usage Extraction** - Works with `generateText()`, `streamText()`, `agent.generate()`, and `agent.stream()`
+- **Formatting Utilities** - `formatCost()`, `formatTokens()`, `summarizeUsage()`
+- **Budget Tracking** - `UsageAccumulator` class for multi-request cost monitoring with automatic enforcement
+- **TypeScript Support** - Full autocomplete for providerOptions and type-safe metadata access
+- **7 Examples** - Comprehensive examples covering all use cases from basic to advanced
 
 ### Streaming Usage
 
@@ -667,6 +668,33 @@ for await (const chunk of result.textStream) {
 
 if (usage) {
   console.log('Cost:', formatCost(usage.cost));
+}
+```
+
+#### With Agent.stream()
+
+Usage tracking also works with `agent.stream()`:
+
+```typescript
+const agent = new Agent({
+  name: 'Assistant',
+  model: openrouter('anthropic/claude-3.5-haiku'),
+  instructions: 'You are a helpful assistant.'
+});
+
+const stream = agent.stream({
+  prompt: 'Explain async/await in JavaScript.',
+  onFinish: async (event) => {
+    const usage = extractOpenRouterUsage(event);
+    if (usage) {
+      console.log('Cost:', formatCost(usage.cost));
+      console.log('Tokens:', usage.totalTokens);
+    }
+  }
+} as any); // Type assertion until AgentStreamOptions includes onFinish
+
+for await (const chunk of stream.textStream) {
+  process.stdout.write(chunk);
 }
 ```
 
