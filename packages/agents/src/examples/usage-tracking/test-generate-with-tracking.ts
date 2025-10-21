@@ -56,7 +56,9 @@ configureUsageTracking({
 
 const agent = new Agent({
   name: "TestAgent",
-  model: openrouter("anthropic/claude-3.5-haiku"),
+  model: openrouter("anthropic/claude-3.5-haiku", {
+    usage: { include: true },  // Required for cost tracking
+  }),
   instructions: "You are helpful.",
 });
 
