@@ -64,6 +64,24 @@ export type {
   ToolPermissionContext,
   ToolPermissionResult,
   ToolPermissions,
+  // OpenRouter types
+  OpenRouterUsage,
+  OpenRouterMetadata,
+  OpenRouterProviderOptions,
 } from "./types.js";
+export { hasOpenRouterUsage } from "./types.js";
 // Utilities
 export { extractTextFromMessage } from "./utils.js";
+// OpenRouter utilities
+export {
+  extractOpenRouterUsage,
+  extractOpenRouterUsageWithDefaults,
+  formatCost,
+  formatTokens,
+  summarizeUsage,
+  UsageAccumulator,
+  type UsageExtractionResult,
+  type SummarizeUsageOptions,
+  type UsageAccumulatorOptions,
+  type AccumulatedUsage,
+} from "./utils/openrouter-usage.js";

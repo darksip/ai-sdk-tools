@@ -13,6 +13,14 @@ import type {
 } from "ai";
 import type { AgentRunContext } from "./run-context.js";
 
+// Re-export OpenRouter types
+export type {
+  OpenRouterUsage,
+  OpenRouterMetadata,
+  OpenRouterProviderOptions,
+} from "./types/openrouter.js";
+export { hasOpenRouterUsage } from "./types/openrouter.js";
+
 /**
  * Interface for context objects that include memory identifiers
  */
@@ -164,6 +172,7 @@ export interface AgentGenerateResult {
   steps?: StepResult<Record<string, Tool>>[];
   finishReason?: string;
   usage?: LanguageModelUsage;
+  providerMetadata?: unknown;
   toolCalls?: Array<{
     toolCallId: string;
     toolName: string;
