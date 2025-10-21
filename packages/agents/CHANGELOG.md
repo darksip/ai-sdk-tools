@@ -1,19 +1,53 @@
 ## Unreleased
 
+## 1.1.0
+
+### Minor Changes
+
+- Add global usage tracking configuration system for automatic monitoring of token usage and costs across all agent operations.
+
+  **New Features:**
+
+  - `configureUsageTracking()` - Set up global tracking for all agents
+  - `resetUsageTracking()` - Clear global configuration
+  - Automatic tracking in both `generate()` and `stream()` methods
+  - Multi-agent handoff tracking with full chain context
+  - Session and context propagation
+  - Provider-agnostic design (OpenAI, Anthropic, OpenRouter, etc.)
+  - Error isolation and async execution
+
+  **Documentation:**
+
+  - Complete guide in `/docs/guides/usage-tracking-configuration.md`
+  - 4 comprehensive examples in `src/examples/usage-tracking/`
+  - OpenRouter-specific configuration guide (`OPENROUTER-COST-TRACKING.md`)
+
+  **Important for OpenRouter users:**
+  When using OpenRouter, you must enable usage accounting to track costs:
+
+  ```typescript
+  const model = openrouter("model-name", { usage: { include: true } });
+  ```
+
+  **Breaking Changes:** None - fully backward compatible
+
 ### Added
 
 - **Global Usage Tracking Configuration**: Automatic usage tracking across all agents without repetitive callback injection
 
   **Core Functions**:
+
   - `configureUsageTracking(config)` - Set up global usage tracking for all agent operations
   - `resetUsageTracking()` - Clear global tracking configuration (useful for testing)
 
   **Types**:
+
   - `UsageTrackingEvent` - Comprehensive event with agent name, session ID, handoff chain, usage metrics, provider metadata, method, finish reason, duration, and context
   - `UsageTrackingHandler` - Async callback function invoked for each usage event
   - `UsageTrackingConfig` - Configuration object with `onUsage` handler and optional `onError` callback
 
   **Features**:
+
   - Automatic tracking in both `agent.generate()` and `agent.stream()` methods
   - Multi-agent handoff tracking with full chain context (`handoffChain` field)
   - Session and context propagation (extracts `sessionId` from execution context)
@@ -23,6 +57,7 @@
   - Type-safe event structure with complete metadata
 
   **Documentation & Examples**:
+
   - 4 comprehensive examples in `src/examples/usage-tracking/`:
     - `basic-tracking.ts` - Simple console logging (OpenAI)
     - `openrouter-cost-tracking.ts` - Real-time cost monitoring with OpenRouter budget alerts
@@ -32,12 +67,14 @@
   - README section with quick start and key features
 
   **Use Cases**:
+
   - Cost monitoring and budget enforcement
   - User/session-level billing and attribution
   - Analytics and usage pattern analysis
   - Real-time budget alerts
 
   **⚠️ Important for OpenRouter Users**:
+
   - OpenRouter requires `usage: { include: true }` on the model configuration to provide cost information
   - Without this flag, `extractOpenRouterUsage()` will return `cost: 0`
   - Example: `openrouter('model-name', { usage: { include: true } })`
@@ -46,11 +83,13 @@
 - **OpenRouter Native Support**: First-class integration with type-safe utilities for cost tracking and budget monitoring
 
   **Type Definitions**:
+
   - `OpenRouterUsage` - Token counts, costs, cache/reasoning details
   - `OpenRouterMetadata` - Complete provider metadata structure
   - `OpenRouterProviderOptions` - Fallback routes, transforms, caching configuration
 
   **Utilities**:
+
   - `extractOpenRouterUsage(result)` - Extract metrics from generation results/events
   - `extractOpenRouterUsageWithDefaults(result)` - Safe extraction with fallback values
   - `formatCost(cost)` - Format USD costs with 6 decimal precision
@@ -60,6 +99,7 @@
   - `hasOpenRouterUsage(metadata)` - Type guard for OpenRouter metadata presence
 
   **Documentation & Examples**:
+
   - 7 comprehensive examples in `src/examples/openrouter/`:
     - Basic agent with usage extraction
     - Streaming usage tracking (streamText + agent.stream)
