@@ -359,11 +359,14 @@ The script automatically:
 
 ## CI/CD Pipeline
 
-**GitHub Actions**: `.github/workflows/release.yml`
-- Triggers: Push to main, manual dispatch
-- Steps: Checkout → Setup Node/Bun → Install → Build → Publish
-- Secrets required: `GITHUB_TOKEN`, `NPM_TOKEN`
+**GitHub Actions**: `.github/workflows/publish-manual.yml`
+- Trigger: Manual workflow dispatch only (no automatic publishing)
+- Steps: Checkout → Setup Node/Bun → Install → Build → Publish with OIDC
+- Secrets required: `NPM_TOKEN`
 - Supports stable and beta releases
+- Uses npm provenance attestation for supply chain security
+
+**Important**: No automatic publishing on push. All releases must be triggered manually via `gh workflow run publish-manual.yml` or GitHub Actions UI.
 
 ## Client/Server Separation
 

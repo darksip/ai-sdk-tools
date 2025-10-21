@@ -196,6 +196,8 @@ This toolkit extends and enhances the Vercel AI SDK:
 - **PostgreSQL/MySQL/SQLite**: Database options for Drizzle memory provider
 
 ### CI/CD
-- **GitHub Actions**: Automated releases (`.github/workflows/release.yml`)
+- **GitHub Actions**: Manual releases only (`.github/workflows/publish-manual.yml`)
 - **npm Registry**: Package publishing destination
-- **Secrets Required**: `GITHUB_TOKEN`, `NPM_TOKEN`
+- **Secrets Required**: `NPM_TOKEN`
+- **Publishing**: No automatic publishing on push, manual workflow dispatch only
+- **Security**: Uses OIDC authentication and npm provenance attestation
