@@ -1,4 +1,18 @@
+# AI SDK Tools Example App (@fondation-io fork)
+
+> **🔱 Fork Notice**: This example app uses packages from the [@fondation-io/ai-sdk-tools](https://github.com/darksip/ai-sdk-tools) fork.
+
 This is a [Next.js](https://nextjs.org) project showcasing AI SDK Tools with multi-agent orchestration, persistent memory, and financial tools.
+
+## Package Dependencies
+
+This app uses the following `@fondation-io` packages:
+- `@fondation-io/agents` - Multi-agent orchestration
+- `@fondation-io/ai-sdk-tools` - Unified toolkit
+- `@fondation-io/artifacts` - Structured streaming
+- `@fondation-io/devtools` - Development tools
+
+All imports have been updated to use the `@fondation-io` scope. See [IMPORTS-FIXED.md](./IMPORTS-FIXED.md) for details.
 
 ## Getting Started
 
@@ -41,15 +55,17 @@ The app automatically detects Upstash credentials and switches providers - no co
 bun install
 ```
 
-### 3. Run the development server:
+### 3. Build dependencies (first time only):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun run build:deps
+```
+
+This builds all `@fondation-io` packages that the app depends on.
+
+### 4. Run the development server:
+
+```bash
 bun dev
 ```
 
