@@ -103,7 +103,7 @@
     },
     "packages/agents": {
       "name": "@fondation-io/agents",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "devDependencies": {
         "@ai-sdk/openai": "^2.0.53",
         "@fondation-io/debug": "workspace:*",
@@ -121,7 +121,7 @@
     },
     "packages/ai-sdk-tools": {
       "name": "@fondation-io/ai-sdk-tools",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "devDependencies": {
         "@fondation-io/agents": "workspace:*",
         "@fondation-io/artifacts": "workspace:*",

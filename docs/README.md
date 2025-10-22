@@ -163,9 +163,12 @@ const agent = new Agent({
 });
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
-  const result = agent.stream({ messages });
-  return result.toDataStreamResponse();
+  const { message, id } = await req.json();
+  return agent.toUIMessageStream({
+    message,
+    context: { chatId: id || 'default' } as any,
+    maxRounds: 5,
+  });
 }
 ```
 

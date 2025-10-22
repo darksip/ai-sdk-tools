@@ -157,18 +157,26 @@ const agent = new Agent({
 });
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { message, id } = await req.json();
 
-  // Stream la réponse
-  const result = agent.stream({
-    messages,
+  if (!message) {
+    return new Response(
+      JSON.stringify({ error: 'No message provided' }),
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  // Stream la réponse avec toUIMessageStream
+  return agent.toUIMessageStream({
+    message,
     context: {
+      chatId: id || 'default',
       sessionId: req.headers.get('x-session-id') || 'default',
       userId: req.headers.get('x-user-id'),
     } as any,
+    maxRounds: 5,
+    maxSteps: 10,
   });
-
-  return result.toDataStreamResponse();
 }
 ```
 
@@ -231,22 +239,30 @@ Always be helpful and provide accurate information.`,
 
 export async function POST(req: Request) {
   try {
-    const { messages } = await req.json();
+    const { message, id } = await req.json();
+
+    if (!message) {
+      return new Response(
+        JSON.stringify({ error: 'No message provided' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Extraction de métadonnées du header ou du body
     const sessionId = req.headers.get('x-session-id') || crypto.randomUUID();
     const userId = req.headers.get('x-user-id');
 
-    const result = agent.stream({
-      messages,
+    return agent.toUIMessageStream({
+      message,
       context: {
+        chatId: id || 'default',
         sessionId,
         userId,
         timestamp: new Date().toISOString(),
       } as any,
+      maxRounds: 5,
+      maxSteps: 10,
     });
-
-    return result.toDataStreamResponse();
 
   } catch (error) {
     console.error('Chat error:', error);
@@ -689,16 +705,24 @@ Always route on the first message.`,
 });
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { message, id } = await req.json();
 
-  const result = triageAgent.stream({
-    messages,
+  if (!message) {
+    return new Response(
+      JSON.stringify({ error: 'No message provided' }),
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  return triageAgent.toUIMessageStream({
+    message,
     context: {
+      chatId: id || 'default',
       sessionId: req.headers.get('x-session-id') || 'default',
     } as any,
+    maxRounds: 5,
+    maxSteps: 10,
   });
-
-  return result.toDataStreamResponse();
 }
 ```
 
