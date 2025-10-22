@@ -1,17 +1,16 @@
-import { openai } from "@ai-sdk/openai";
 import { analyticsAgent } from "./analytics";
 import { customersAgent } from "./customers";
 import { generalAgent } from "./general";
 import { invoicesAgent } from "./invoices";
 import { operationsAgent } from "./operations";
 import { reportsAgent } from "./reports";
-import { type AppContext, createAgent, formatContextForLLM } from "./shared";
+import { type AppContext, createAgent, defaultModel, formatContextForLLM } from "./shared";
 import { timeTrackingAgent } from "./time-tracking";
 import { transactionsAgent } from "./transactions";
 
 export const triageAgent = createAgent({
   name: "triage",
-  model: openai("gpt-4o-mini"),
+  model: defaultModel,
   modelSettings: {
     toolChoice: "required",
     activeTools: ["handoff_to_agent"],

@@ -1,15 +1,14 @@
-import { openai } from "@ai-sdk/openai";
 import {
   exportDataTool,
   getBalancesTool,
   listDocumentsTool,
   listInboxItemsTool,
 } from "../tools/operations";
-import { createAgent, formatContextForLLM } from "./shared";
+import { createAgent, defaultModel, formatContextForLLM } from "./shared";
 
 export const operationsAgent = createAgent({
   name: "operations",
-  model: openai("gpt-4o-mini"),
+  model: defaultModel,
   instructions: (
     ctx,
   ) => `You are an operations specialist for ${ctx.companyName}.

@@ -4,17 +4,16 @@
  * Analytics & forecasting specialist with business intelligence tools
  */
 
-import { openai } from "@ai-sdk/openai";
 import {
   businessHealthScoreTool,
   cashFlowForecastTool,
   cashFlowStressTestTool,
 } from "../tools/analytics";
-import { createAgent, formatContextForLLM } from "./shared";
+import { createAgent, defaultModel, formatContextForLLM } from "./shared";
 
 export const analyticsAgent = createAgent({
   name: "analytics",
-  model: openai("gpt-4o"),
+  model: defaultModel,
   instructions: (
     ctx,
   ) => `You are an analytics & forecasting specialist for ${ctx.companyName}.

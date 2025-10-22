@@ -1,4 +1,3 @@
-import { openai } from "@ai-sdk/openai";
 import {
   balanceSheetTool,
   burnRateMetricsTool,
@@ -10,11 +9,11 @@ import {
   spendingMetricsTool,
   taxSummaryTool,
 } from "../tools/reports";
-import { type AppContext, createAgent, formatContextForLLM } from "./shared";
+import { type AppContext, createAgent, defaultModel, formatContextForLLM } from "./shared";
 
 export const reportsAgent = createAgent({
   name: "reports",
-  model: openai("gpt-4o-mini"),
+  model: defaultModel,
   instructions: (
     ctx: AppContext,
   ) => `You are a financial reports specialist for ${ctx.companyName}.

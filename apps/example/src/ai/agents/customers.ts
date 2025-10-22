@@ -1,4 +1,3 @@
-import { openai } from "@ai-sdk/openai";
 import {
   createCustomerTool,
   customerProfitabilityTool,
@@ -6,11 +5,11 @@ import {
   getCustomersTool,
   updateCustomerTool,
 } from "../tools/customers";
-import { createAgent, formatContextForLLM } from "./shared";
+import { createAgent, defaultModel, formatContextForLLM } from "./shared";
 
 export const customersAgent = createAgent({
   name: "customers",
-  model: openai("gpt-4o-mini"),
+  model: defaultModel,
   instructions: (
     ctx,
   ) => `You are a customer management specialist for ${ctx.companyName}.

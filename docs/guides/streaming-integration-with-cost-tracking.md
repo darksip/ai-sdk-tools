@@ -1,19 +1,33 @@
 # Guide d'intégration : Streaming avec OpenRouter et Cost Tracking
 
-Ce guide montre comment intégrer `@fondation-io/agents` dans une application Next.js avec streaming vers l'interface utilisateur, en utilisant le modèle Claude Sonnet 4.5 d'OpenRouter, et avec suivi automatique des coûts.
+Ce guide montre comment intégrer `@fondation-io/agents` dans une application Next.js avec streaming vers l'interface utilisateur, en utilisant OpenRouter, et avec suivi automatique des coûts.
+
+> ✅ **Configuration validée** : Ce guide est basé sur l'exemple fonctionnel dans `apps/example` utilisant `anthropic/claude-haiku-4.5`.
 
 ## Table des matières
 
-1. [Installation](#installation)
-2. [Configuration de base](#configuration-de-base)
-3. [Backend : API Route avec Streaming](#backend--api-route-avec-streaming)
-4. [Frontend : Composant React avec useChat](#frontend--composant-react-avec-usechat)
-5. [Configuration du Cost Tracking](#configuration-du-cost-tracking)
-6. [Exemple complet](#exemple-complet)
+1. [Modèles recommandés](#modèles-recommandés)
+2. [Installation](#installation)
+3. [Configuration de base](#configuration-de-base)
+4. [Backend : API Route avec Streaming](#backend--api-route-avec-streaming)
+5. [Frontend : Composant React avec useChat](#frontend--composant-react-avec-usechat)
+6. [Configuration du Cost Tracking](#configuration-du-cost-tracking)
 7. [Multi-agents avec Handoffs](#multi-agents-avec-handoffs)
 8. [Troubleshooting](#troubleshooting)
+9. [Exemples complets](#exemples-complets)
 
 ---
+
+## Modèles recommandés
+
+Ce guide utilise `anthropic/claude-haiku-4.5` comme modèle par défaut (rapide et économique).
+
+Autres options OpenRouter :
+- `anthropic/claude-3.5-sonnet` - Performance élevée
+- `openai/gpt-4o-mini` - Budget-friendly
+- `google/gemini-pro-1.5` - Long contexte (2M tokens)
+
+Voir tous les modèles : https://openrouter.ai/models
 
 ## Installation
 
@@ -150,7 +164,7 @@ export const runtime = 'edge'; // ou 'nodejs'
 // ⚠️ IMPORTANT: usage: { include: true } est REQUIS pour le cost tracking
 const agent = new Agent({
   name: 'Assistant',
-  model: openrouter('anthropic/claude-sonnet-4.5', {
+  model: openrouter('anthropic/claude-haiku-4.5', {
     usage: { include: true } // ← REQUIS pour obtenir les coûts
   }),
   instructions: 'You are a helpful AI assistant. Be concise and accurate.',
@@ -220,7 +234,7 @@ const searchTool = tool({
 // Agent avec tools et configuration avancée
 const agent = new Agent({
   name: 'SmartAssistant',
-  model: openrouter('anthropic/claude-sonnet-4.5', {
+  model: openrouter('anthropic/claude-haiku-4.5', {
     usage: { include: true },
   }),
   instructions: `You are an intelligent assistant with access to weather and search tools.
@@ -377,7 +391,7 @@ export default function AdvancedChatInterface() {
         <h1 className="text-2xl font-bold mb-2">AI Assistant</h1>
         <div className="text-sm text-gray-600">
           Messages: {messages.length} |
-          Model: Claude Sonnet 4.5 (OpenRouter)
+          Model: Claude Haiku 4.5 (OpenRouter)
         </div>
       </div>
 
@@ -648,7 +662,7 @@ import { z } from 'zod';
 import { tool } from 'ai';
 
 // Modèle partagé
-const model = openrouter('anthropic/claude-sonnet-4.5', {
+const model = openrouter('anthropic/claude-haiku-4.5', {
   usage: { include: true },
 });
 
@@ -806,12 +820,12 @@ export default function MultiAgentChat() {
 ```typescript
 // ❌ Incorrect - pas de coûts
 const agent = new Agent({
-  model: openrouter('anthropic/claude-sonnet-4.5'),
+  model: openrouter('anthropic/claude-haiku-4.5'),
 });
 
 // ✅ Correct - coûts trackés
 const agent = new Agent({
-  model: openrouter('anthropic/claude-sonnet-4.5', {
+  model: openrouter('anthropic/claude-haiku-4.5', {
     usage: { include: true }
   }),
 });
@@ -819,25 +833,45 @@ const agent = new Agent({
 
 ### Streaming ne fonctionne pas
 
-**Problème**: Les messages n'apparaissent pas progressivement.
+**Problème**: Les messages n'apparaissent pas progressivement ou le stream se termine sans réponse.
 
 **Solution**:
-1. Vérifiez que vous utilisez `agent.stream()` et non `agent.generate()`
-2. Vérifiez que vous retournez `result.toDataStreamResponse()`
-3. Vérifiez la configuration de votre runtime (`edge` ou `nodejs`)
+1. ✅ Utilisez `agent.toUIMessageStream()` (API validée)
+2. ✅ Passez un `message` (objet), pas `messages` (array)
+3. ✅ Retournez directement le résultat (déjà une Response)
+
+```typescript
+// ✅ CORRECT - API validée
+export async function POST(req: Request) {
+  const { message, id } = await req.json();
+
+  return agent.toUIMessageStream({
+    message,
+    context: { chatId: id } as any,
+    maxRounds: 5,
+    maxSteps: 10,
+  });
+}
+
+// ❌ INCORRECT - API obsolète
+const result = agent.stream({ messages });
+return result.toDataStreamResponse();
+```
 
 ### Session ID manquant dans le tracking
 
 **Problème**: `event.sessionId` est undefined dans le cost tracking.
 
-**Solution**: Passez le sessionId dans le context :
+**Solution**: Passez le sessionId dans le context de `toUIMessageStream` :
 
 ```typescript
-const result = agent.stream({
-  messages,
+return agent.toUIMessageStream({
+  message,
   context: {
+    chatId: id,
     sessionId: 'your-session-id', // ← Important
   } as any,
+  maxRounds: 5,
 });
 ```
 
@@ -863,9 +897,25 @@ const result = agent.stream({
 
 ## Exemples complets
 
-Consultez les exemples complets dans :
+### Exemple validé et fonctionnel
+
+L'application dans `apps/example` est un exemple **validé et testé** qui implémente :
+- ✅ Multi-agents avec handoffs (triage → spécialisés)
+- ✅ OpenRouter avec `anthropic/claude-haiku-4.5`
+- ✅ Mémoire persistante (Upstash Redis)
+- ✅ Working memory
+- ✅ Génération de titres et suggestions
+- ✅ Streaming avec `toUIMessageStream()`
+
+Voir le code source : `apps/example/src/ai/agents/`
+
+### Autres exemples
+
+Consultez aussi :
 - `packages/agents/src/examples/usage-tracking/`
 - `docs/guides/openrouter-native-support.md`
+- `docs/examples/openrouter-quick-start.md` - Configuration rapide validée
+- `docs/examples/minimal-two-agent-handoff.md` - Exemple minimal
 
 ## Ressources
 
@@ -873,3 +923,4 @@ Consultez les exemples complets dans :
 - [OpenRouter Documentation](https://openrouter.ai/docs)
 - [AI SDK Documentation](https://sdk.vercel.ai/docs)
 - [Guide OpenRouter Cost Tracking](../../packages/agents/src/examples/usage-tracking/OPENROUTER-COST-TRACKING.md)
+- [OpenRouter Quick Start (validé)](../examples/openrouter-quick-start.md)

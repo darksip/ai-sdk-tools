@@ -10,7 +10,10 @@ import { Redis } from "@upstash/redis";
 import type { AgentConfig } from "@fondation-io/agents";
 import { Agent } from "@fondation-io/agents";
 import { UpstashProvider, type MemoryConfig } from "@fondation-io/ai-sdk-tools";
-import { openai } from "@ai-sdk/openai";
+import { openrouter } from "@openrouter/ai-sdk-provider";
+
+// Default model for all agents
+export const defaultModel = openrouter("anthropic/claude-haiku-4.5");
 
 // Load memory template from markdown file
 const memoryTemplate = readFileSync(
@@ -130,12 +133,12 @@ export const createAgent = (config: AgentConfig<AppContext>) => {
       chats: {
         enabled: true,
         generateTitle: {
-          model: openai("gpt-4.1-nano"),
+          model: openrouter("anthropic/claude-haiku-4.5"),
           instructions: "Generate a short, focused title based on the user's message. Max 50 characters. Focus on the main action or topic. Return ONLY plain text - no markdown, no quotes, no special formatting. Examples: Hiring Analysis, Affordability Check, Burn Rate Forecast, Price Research, Account Balance, Revenue Report"
         },
         generateSuggestions: {
           enabled: true,
-          model: openai("gpt-4.1-nano"),
+          model: openrouter("anthropic/claude-haiku-4.5"),
           limit: 5,
           instructions: suggestionsInstructions,
         },

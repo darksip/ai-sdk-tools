@@ -1,13 +1,12 @@
-import { openai } from "@ai-sdk/openai";
 import {
   getTransactionTool,
   listTransactionsTool,
 } from "../tools/transactions";
-import { createAgent, formatContextForLLM } from "./shared";
+import { createAgent, defaultModel, formatContextForLLM } from "./shared";
 
 export const transactionsAgent = createAgent({
   name: "transactions",
-  model: openai("gpt-4o-mini"),
+  model: defaultModel,
   instructions: (
     ctx,
   ) => `You are a transactions specialist with access to live transaction data for ${ctx.companyName}.

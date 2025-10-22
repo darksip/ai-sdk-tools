@@ -27,8 +27,10 @@ cp .env.local.example .env.local
 Add your API keys:
 
 ```env
-# Required
-OPENAI_API_KEY=sk-...
+# Required - Choose one AI provider
+OPENAI_API_KEY=sk-...              # OpenAI (default)
+# OR
+OPENROUTER_API_KEY=sk-or-v1-...   # OpenRouter (300+ models)
 
 # Optional - Memory Persistence
 UPSTASH_REDIS_REST_URL=https://your-redis.upstash.io
@@ -48,6 +50,34 @@ UPSTASH_REDIS_REST_TOKEN=your-token-here
 3. Copy REST URL and Token to `.env.local`
 
 The app automatically detects Upstash credentials and switches providers - no code changes needed!
+
+**AI Provider Options:**
+
+| Provider | Models | When to Use | Cost |
+|----------|--------|------------|------|
+| **OpenAI** | GPT-4o, GPT-4o-mini | Default, simple setup | Standard OpenAI pricing |
+| **OpenRouter** | 300+ models (Claude, GPT, Gemini, etc.) | Access to multiple providers, cost optimization | Variable, often cheaper |
+
+**To use OpenRouter:**
+
+1. Get API key from [openrouter.ai](https://openrouter.ai)
+2. Install the provider: `bun add @openrouter/ai-sdk-provider`
+3. Update `src/ai/agents/shared.ts`:
+
+```typescript
+import { openrouter } from "@openrouter/ai-sdk-provider";
+
+// Default model for all agents
+export const defaultModel = openrouter("anthropic/claude-haiku-4.5");
+```
+
+Popular OpenRouter models:
+- `anthropic/claude-haiku-4.5` - Fast, cost-effective (recommended)
+- `anthropic/claude-3.5-sonnet` - High performance
+- `openai/gpt-4o-mini` - Budget-friendly
+- `google/gemini-pro-1.5` - Long context
+
+See [OpenRouter models](https://openrouter.ai/models) for full list.
 
 ### 2. Install dependencies:
 

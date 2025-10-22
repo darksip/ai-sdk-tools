@@ -21,6 +21,7 @@
         "@fondation-io/ai-sdk-tools": "workspace:*",
         "@fondation-io/artifacts": "workspace:*",
         "@fondation-io/devtools": "workspace:*",
+        "@openrouter/ai-sdk-provider": "^1.2.0",
         "@radix-ui/react-avatar": "^1.1.10",
         "@radix-ui/react-collapsible": "^1.1.12",
         "@radix-ui/react-dialog": "^1.1.15",

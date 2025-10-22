@@ -1,4 +1,3 @@
-import { openai } from "@ai-sdk/openai";
 import {
   createTimeEntryTool,
   deleteTimeEntryTool,
@@ -8,11 +7,11 @@ import {
   stopTimerTool,
   updateTimeEntryTool,
 } from "../tools/tracker";
-import { createAgent, formatContextForLLM } from "./shared";
+import { createAgent, defaultModel, formatContextForLLM } from "./shared";
 
 export const timeTrackingAgent = createAgent({
   name: "timeTracking",
-  model: openai("gpt-4o-mini"),
+  model: defaultModel,
   instructions: (
     ctx,
   ) => `You are a time tracking specialist for ${ctx.companyName}.
