@@ -1,6 +1,6 @@
 "use client";
 
-import { useArtifact } from "ai-sdk-tools/client";
+import { useArtifact } from "@fondation-io/ai-sdk-tools/client";
 import { format } from "date-fns";
 import { BalanceSheetArtifact } from "@/ai/artifacts/balance-sheet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

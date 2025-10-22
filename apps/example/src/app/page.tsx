@@ -5,7 +5,7 @@ import {
   useArtifacts,
   useChat,
   useChatActions,
-} from "ai-sdk-tools/client";
+} from "@fondation-io/ai-sdk-tools/client";
 import { type RefObject, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import {

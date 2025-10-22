@@ -1,7 +1,7 @@
 "use client";
 
-import { useDataPart } from "ai-sdk-tools/client";
-import { useChatActions } from "ai-sdk-tools/client";
+import { useDataPart } from "@fondation-io/ai-sdk-tools/client";
+import { useChatActions } from "@fondation-io/ai-sdk-tools/client";
 import { AnimatePresence, motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 

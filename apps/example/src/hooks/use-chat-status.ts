@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import type { UIMessage, ToolUIPart } from "ai";
 import type { ChatStatus } from "ai";
-import { useDataPart } from "ai-sdk-tools/client";
+import { useDataPart } from "@fondation-io/ai-sdk-tools/client";
 import type { AgentStatus } from "@/types/agents";
 
 interface ChatStatusResult {

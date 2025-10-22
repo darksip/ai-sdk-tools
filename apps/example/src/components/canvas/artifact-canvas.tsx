@@ -1,6 +1,6 @@
 "use client";
 
-import { useArtifacts } from "ai-sdk-tools/client";
+import { useArtifacts } from "@fondation-io/ai-sdk-tools/client";
 import { X } from "lucide-react";
 import { BalanceSheetCanvas } from "./balance-sheet-canvas";
 import { RevenueCanvas } from "./revenue-canvas";
